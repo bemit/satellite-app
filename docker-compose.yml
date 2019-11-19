@@ -1,0 +1,23 @@
+version: "3.0"
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    environment:
+      - DB_HOST=host.docker.internal
+    ports:
+      - "3333:80"
+    volumes:
+      - ./:/var/www/html
+
+  mailhog:
+    container_name: mailhog_satellite
+    image: mailhog/mailhog
+    restart: always
+    logging:
+      driver: 'none'  # disable saving logs
+    ports:
+      - 1030:1025
+      - 8030:8025
