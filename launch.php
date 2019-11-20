@@ -1,17 +1,19 @@
 <?php
 
-require_once __DIR__ . '/_routes.php';
-
 use Satellite\Event;
+
+use Satellite\SystemLaunchEvent;
+use Satellite\System;
+
 use Satellite\KernelConsole\Console;
 use Satellite\KernelConsole\ConsoleEvent;
 use Satellite\KernelRoute\Router;
 use Satellite\KernelRoute\RouteEvent;
 use Satellite\Response\RespondPipe;
-use Satellite\SystemLaunchEvent;
-use Satellite\System;
 
-Event::on(SystemLaunchEvent::class, 'enableNiceDebug');
+if(getenv('env') !== 'prod') {
+    Event::on(SystemLaunchEvent::class, 'enableNiceDebug');
+}
 
 Event::on(SystemLaunchEvent::class, [Console::class, 'handle',]);
 

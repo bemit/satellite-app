@@ -17,8 +17,6 @@ if(PHP_SAPI === 'cli-server' || getenv('env') !== 'prod') {
 
 require_once __DIR__ . '/../boot.php';
 
-require_once __DIR__ . '/../exec.php';
-
 if(PHP_SAPI === 'cli-server' || getenv('env') !== 'prod') {
     error_log('... ' . number_format((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']), 6) . 's' . PHP_EOL);
 }
