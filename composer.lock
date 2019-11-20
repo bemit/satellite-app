@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "51105b4ff1531e91afd1b19d6417934e",
+    "content-hash": "133e853294ce8eb3017fd9db051e96c3",
     "packages": [
         {
             "name": "equip/dispatch",
@@ -47,6 +47,64 @@
             ],
             "description": "An HTTP Interop compatible middleware dispatcher",
             "time": "2018-01-26T14:37:46+00:00"
+        },
+        {
+            "name": "jeremeamia/superclosure",
+            "version": "2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jeremeamia/super_closure.git",
+                "reference": "5707d5821b30b9a07acfb4d76949784aaa0e9ce9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jeremeamia/super_closure/zipball/5707d5821b30b9a07acfb4d76949784aaa0e9ce9",
+                "reference": "5707d5821b30b9a07acfb4d76949784aaa0e9ce9",
+                "shasum": ""
+            },
+            "require": {
+                "nikic/php-parser": "^1.2|^2.0|^3.0|^4.0",
+                "php": ">=5.4",
+                "symfony/polyfill-php56": "^1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0|^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "SuperClosure\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeremy Lindblom",
+                    "email": "jeremeamia@gmail.com",
+                    "homepage": "https://github.com/jeremeamia",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Serialize Closure objects, including their context and binding",
+            "homepage": "https://github.com/jeremeamia/super_closure",
+            "keywords": [
+                "closure",
+                "function",
+                "lambda",
+                "parser",
+                "serializable",
+                "serialize",
+                "tokenizer"
+            ],
+            "time": "2018-03-21T22:21:57+00:00"
         },
         {
             "name": "middlewares/fast-route",
@@ -362,6 +420,58 @@
             "time": "2018-02-13T20:26:39+00:00"
         },
         {
+            "name": "nikic/php-parser",
+            "version": "v4.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nikic/PHP-Parser.git",
+                "reference": "9a9981c347c5c49d6dfe5cf826bb882b824080dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/9a9981c347c5c49d6dfe5cf826bb882b824080dc",
+                "reference": "9a9981c347c5c49d6dfe5cf826bb882b824080dc",
+                "shasum": ""
+            },
+            "require": {
+                "ext-tokenizer": "*",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "ircmaxell/php-yacc": "0.0.5",
+                "phpunit/phpunit": "^6.5 || ^7.0 || ^8.0"
+            },
+            "bin": [
+                "bin/php-parse"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PhpParser\\": "lib/PhpParser"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Nikita Popov"
+                }
+            ],
+            "description": "A PHP parser written in PHP",
+            "keywords": [
+                "parser",
+                "php"
+            ],
+            "time": "2019-11-08T13:50:10+00:00"
+        },
+        {
             "name": "nyholm/psr7",
             "version": "1.2.1",
             "source": {
@@ -511,17 +621,26 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bemit/satellite.git",
-                "reference": "669c354cc4e91232b764e133da318ecdfb8366b4"
+                "reference": "62bd74adad74a4282761a08bf40bc64679980d21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bemit/satellite/zipball/669c354cc4e91232b764e133da318ecdfb8366b4",
-                "reference": "669c354cc4e91232b764e133da318ecdfb8366b4",
+                "url": "https://api.github.com/repos/bemit/satellite/zipball/62bd74adad74a4282761a08bf40bc64679980d21",
+                "reference": "62bd74adad74a4282761a08bf40bc64679980d21",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0",
+                "php-di/invoker": "^2.0.0",
+                "psr/container": "^1.0",
                 "psr/event-dispatcher": "^1.0"
+            },
+            "suggest": {
+                "orbiter/satellite-console": "SystemLaunch Event Handler, adds CLI based on GetOpt",
+                "orbiter/satellite-di": "SystemLaunch Event Handler, adds DI based on PHP-DI, implements PSR-11",
+                "orbiter/satellite-response": "Middleware Pipe, Dispatcher and Emitter, compatible with PSR-7,15,17",
+                "orbiter/satellite-route": "SystemLaunch Event Handler, adds Routing Middleware and unified Route Store, implements PSR-7,17 and PSR-15 middlewares helper",
+                "orbiter/satellite-whoops": "Nice Error Pages for Developers in CLI and Routes"
             },
             "type": "library",
             "autoload": {
@@ -534,7 +653,7 @@
                 "MIT"
             ],
             "description": "Easy to use Event & Middleware Mini-Framework, powered by popular projects and PSR's",
-            "time": "2019-11-19T21:32:18+00:00"
+            "time": "2019-11-20T23:01:00+00:00"
         },
         {
             "name": "orbiter/satellite-console",
@@ -542,12 +661,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bemit/satellite-console.git",
-                "reference": "7332a9bf8ce9e38e05ecbdfeef55e7f847a8d76a"
+                "reference": "797b1f084abcf4da5bfab15d996b0c39967d4792"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bemit/satellite-console/zipball/7332a9bf8ce9e38e05ecbdfeef55e7f847a8d76a",
-                "reference": "7332a9bf8ce9e38e05ecbdfeef55e7f847a8d76a",
+                "url": "https://api.github.com/repos/bemit/satellite-console/zipball/797b1f084abcf4da5bfab15d996b0c39967d4792",
+                "reference": "797b1f084abcf4da5bfab15d996b0c39967d4792",
                 "shasum": ""
             },
             "require": {
@@ -566,7 +685,40 @@
             "license": [
                 "MIT"
             ],
-            "time": "2019-11-19T21:57:49+00:00"
+            "time": "2019-11-20T22:57:59+00:00"
+        },
+        {
+            "name": "orbiter/satellite-di",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bemit/satellite-di.git",
+                "reference": "22e2a75192d822ac8f8ab15d6bf7f53ebe896e8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bemit/satellite-di/zipball/22e2a75192d822ac8f8ab15d6bf7f53ebe896e8a",
+                "reference": "22e2a75192d822ac8f8ab15d6bf7f53ebe896e8a",
+                "shasum": ""
+            },
+            "require": {
+                "orbiter/satellite": "*",
+                "php": ">=7.0",
+                "php-di/php-di": "^6.0.0",
+                "psr/container": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Satellite\\DI\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "DI Registration for Satellite",
+            "time": "2019-11-20T22:54:06+00:00"
         },
         {
             "name": "orbiter/satellite-response",
@@ -574,12 +726,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bemit/satellite-response.git",
-                "reference": "d676c87da4c007180ebecf9de71cf53bf737c19f"
+                "reference": "86cf667dbbd4158ee2ed0a0a442b6d93b4661070"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bemit/satellite-response/zipball/d676c87da4c007180ebecf9de71cf53bf737c19f",
-                "reference": "d676c87da4c007180ebecf9de71cf53bf737c19f",
+                "url": "https://api.github.com/repos/bemit/satellite-response/zipball/86cf667dbbd4158ee2ed0a0a442b6d93b4661070",
+                "reference": "86cf667dbbd4158ee2ed0a0a442b6d93b4661070",
                 "shasum": ""
             },
             "require": {
@@ -604,7 +756,7 @@
             "license": [
                 "MIT"
             ],
-            "time": "2019-11-19T21:54:10+00:00"
+            "time": "2019-11-20T22:59:51+00:00"
         },
         {
             "name": "orbiter/satellite-route",
@@ -612,12 +764,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bemit/satellite-route.git",
-                "reference": "cccd51060efea12b11a6376281b447b816b3d1d7"
+                "reference": "b1b3dc471f7be2ab6df4cf2f4e6fe3df4387368d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bemit/satellite-route/zipball/cccd51060efea12b11a6376281b447b816b3d1d7",
-                "reference": "cccd51060efea12b11a6376281b447b816b3d1d7",
+                "url": "https://api.github.com/repos/bemit/satellite-route/zipball/b1b3dc471f7be2ab6df4cf2f4e6fe3df4387368d",
+                "reference": "b1b3dc471f7be2ab6df4cf2f4e6fe3df4387368d",
                 "shasum": ""
             },
             "require": {
@@ -641,7 +793,150 @@
             "license": [
                 "MIT"
             ],
-            "time": "2019-11-19T21:54:20+00:00"
+            "time": "2019-11-20T22:55:47+00:00"
+        },
+        {
+            "name": "php-di/invoker",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHP-DI/Invoker.git",
+                "reference": "540c27c86f663e20fe39a24cd72fa76cdb21d41a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHP-DI/Invoker/zipball/540c27c86f663e20fe39a24cd72fa76cdb21d41a",
+                "reference": "540c27c86f663e20fe39a24cd72fa76cdb21d41a",
+                "shasum": ""
+            },
+            "require": {
+                "psr/container": "~1.0"
+            },
+            "require-dev": {
+                "athletic/athletic": "~0.1.8",
+                "phpunit/phpunit": "~4.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Invoker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Generic and extensible callable invoker",
+            "homepage": "https://github.com/PHP-DI/Invoker",
+            "keywords": [
+                "callable",
+                "dependency",
+                "dependency-injection",
+                "injection",
+                "invoke",
+                "invoker"
+            ],
+            "time": "2017-03-20T19:28:22+00:00"
+        },
+        {
+            "name": "php-di/php-di",
+            "version": "6.0.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHP-DI/PHP-DI.git",
+                "reference": "a6c813bf6b0d0bdeade3ac5a920e2c2a5b1a6ce3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHP-DI/PHP-DI/zipball/a6c813bf6b0d0bdeade3ac5a920e2c2a5b1a6ce3",
+                "reference": "a6c813bf6b0d0bdeade3ac5a920e2c2a5b1a6ce3",
+                "shasum": ""
+            },
+            "require": {
+                "jeremeamia/superclosure": "^2.0",
+                "nikic/php-parser": "^2.0|^3.0|^4.0",
+                "php": ">=7.0.0",
+                "php-di/invoker": "^2.0",
+                "php-di/phpdoc-reader": "^2.0.1",
+                "psr/container": "^1.0"
+            },
+            "provide": {
+                "psr/container-implementation": "^1.0"
+            },
+            "require-dev": {
+                "doctrine/annotations": "~1.2",
+                "friendsofphp/php-cs-fixer": "^2.4",
+                "mnapoli/phpunit-easymock": "~1.0",
+                "ocramius/proxy-manager": "~2.0.2",
+                "phpstan/phpstan": "^0.9.2",
+                "phpunit/phpunit": "~6.4"
+            },
+            "suggest": {
+                "doctrine/annotations": "Install it if you want to use annotations (version ~1.2)",
+                "ocramius/proxy-manager": "Install it if you want to use lazy injection (version ~2.0)"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DI\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "The dependency injection container for humans",
+            "homepage": "http://php-di.org/",
+            "keywords": [
+                "PSR-11",
+                "container",
+                "container-interop",
+                "dependency injection",
+                "di",
+                "ioc",
+                "psr11"
+            ],
+            "time": "2019-10-21T11:58:24+00:00"
+        },
+        {
+            "name": "php-di/phpdoc-reader",
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHP-DI/PhpDocReader.git",
+                "reference": "15678f7451c020226807f520efb867ad26fbbfcf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHP-DI/PhpDocReader/zipball/15678f7451c020226807f520efb867ad26fbbfcf",
+                "reference": "15678f7451c020226807f520efb867ad26fbbfcf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpDocReader\\": "src/PhpDocReader"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PhpDocReader parses @var and @param values in PHP docblocks (supports namespaced class names with the same resolution rules as PHP)",
+            "keywords": [
+                "phpdoc",
+                "reflection"
+            ],
+            "time": "2019-09-26T11:24:58+00:00"
         },
         {
             "name": "php-http/message-factory",
@@ -1159,6 +1454,114 @@
                 "mbstring",
                 "polyfill",
                 "portable",
+                "shim"
+            ],
+            "time": "2019-08-06T08:03:45+00:00"
+        },
+        {
+            "name": "symfony/polyfill-php56",
+            "version": "v1.12.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-php56.git",
+                "reference": "0e3b212e96a51338639d8ce175c046d7729c3403"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-php56/zipball/0e3b212e96a51338639d8ce175c046d7729c3403",
+                "reference": "0e3b212e96a51338639d8ce175c046d7729c3403",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/polyfill-util": "~1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.12-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php56\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 5.6+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "time": "2019-08-06T08:03:45+00:00"
+        },
+        {
+            "name": "symfony/polyfill-util",
+            "version": "v1.12.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-util.git",
+                "reference": "4317de1386717b4c22caed7725350a8887ab205c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-util/zipball/4317de1386717b4c22caed7725350a8887ab205c",
+                "reference": "4317de1386717b4c22caed7725350a8887ab205c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.12-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Util\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony utilities for portability of PHP codes",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compat",
+                "compatibility",
+                "polyfill",
                 "shim"
             ],
             "time": "2019-08-06T08:03:45+00:00"
@@ -1827,6 +2230,7 @@
     "stability-flags": {
         "orbiter/satellite": 20,
         "orbiter/satellite-route": 20,
+        "orbiter/satellite-di": 20,
         "orbiter/satellite-console": 20,
         "orbiter/satellite-response": 20,
         "orbiter/middleware-twig": 20,

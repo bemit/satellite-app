@@ -10,6 +10,7 @@
     "psr/http-message": "^1.0",
     "orbiter/satellite": "dev-master",
     "orbiter/satellite-route": "dev-master",
+    "orbiter/satellite-di": "dev-master",
     "orbiter/satellite-console": "dev-master",
     "orbiter/satellite-response": "dev-master",
     "orbiter/middleware-twig": "dev-master",
