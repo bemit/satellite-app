@@ -1,5 +1,6 @@
 <?php
 
+use Psr\Container\ContainerInterface;
 use Satellite\Event;
 
 use Satellite\SystemLaunchEvent;
@@ -10,17 +11,24 @@ use Satellite\KernelConsole\ConsoleEvent;
 use Satellite\KernelRoute\Router;
 use Satellite\KernelRoute\RouteEvent;
 use Satellite\Response\RespondPipe;
+use Orbiter\AnnotationsUtil\AnnotationsUtil;
+use Satellite\DI\Container;
 
 if(getenv('env') !== 'prod') {
     Event::on(SystemLaunchEvent::class, 'enableNiceDebug');
 }
 
+// Setup Console
 Event::on(SystemLaunchEvent::class, [Console::class, 'handle',]);
 
-Event::on(ConsoleEvent::class, static function($evt) {
-    return new Event\Delegate($evt->handler, $evt);
+Event::on(ConsoleEvent::class, static function($evt, Event\DelegateInterface $delegate) {
+    $delegate->setHandler($evt->handler);
+    $delegate->setEvent($evt);
+
+    return $delegate;
 });
 
+// Setup Routing
 Router::setCache(getenv('env') === 'prod' ? __DIR__ . '/tmp/route.cache' : null);
 Event::on(SystemLaunchEvent::class, [Router::class, 'handle',]);
 
@@ -40,9 +48,27 @@ Event::on(RouteEvent::class, static function(RouteEvent $resp, Psr\Container\Con
     return $resp;
 });
 
-$container = new Satellite\DI\Container(getenv('env') === 'prod' ? __DIR__ . '/tmp/di' : null);
-$container->autowire(true);
-$container->annotations(false);
+// Setup Annotations
+AnnotationsUtil::registerPsr4Namespace('Lib', __DIR__ . '/lib');
+Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('dummy');
+
+AnnotationsUtil::useReader(
+    AnnotationsUtil::createReader(getenv('env') === 'prod' ? __DIR__ . '/tmp/annotations' : null)
+);
+
+// Setup DI
+$container = new Container();
+$container->useAutowiring(true);
+$container->useAnnotations(true);
+if(getenv('env') === 'prod') {
+    $container->enableCompilation(__DIR__ . '/tmp/di');
+}
+
+$container->addDefinitions([
+    ContainerInterface::class => DI\autowire(get_class($container)),// must be provided for Container
+    Event\DelegateInterface::class => DI\autowire(Event\Delegate::class),// optional usage for Event\Delegate
+]);
+
 try {
     Event::useContainer($container->container());
 } catch(\Exception $e) {
@@ -50,6 +76,7 @@ try {
     exit(2);
 }
 
+// Launch your Satellite!
 $satellite = new System();
 $satellite->launch();
 

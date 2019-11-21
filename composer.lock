@@ -4,8 +4,221 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "133e853294ce8eb3017fd9db051e96c3",
+    "content-hash": "39d9914e6d0dcd0a59911f968b4a6407",
     "packages": [
+        {
+            "name": "doctrine/annotations",
+            "version": "v1.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/annotations.git",
+                "reference": "904dca4eb10715b92569fbcd79e201d5c349b6bc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/904dca4eb10715b92569fbcd79e201d5c349b6bc",
+                "reference": "904dca4eb10715b92569fbcd79e201d5c349b6bc",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/lexer": "1.*",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "doctrine/cache": "1.*",
+                "phpunit/phpunit": "^7.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.7.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "Docblock Annotations Parser",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "annotations",
+                "docblock",
+                "parser"
+            ],
+            "time": "2019-10-01T18:55:10+00:00"
+        },
+        {
+            "name": "doctrine/cache",
+            "version": "1.9.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/cache.git",
+                "reference": "89a5c76c39c292f7798f964ab3c836c3f8192a55"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/89a5c76c39c292f7798f964ab3c836c3f8192a55",
+                "reference": "89a5c76c39c292f7798f964ab3c836c3f8192a55",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~7.1"
+            },
+            "conflict": {
+                "doctrine/common": ">2.2,<2.4"
+            },
+            "require-dev": {
+                "alcaeus/mongo-php-adapter": "^1.1",
+                "doctrine/coding-standard": "^6.0",
+                "mongodb/mongodb": "^1.1",
+                "phpunit/phpunit": "^7.0",
+                "predis/predis": "~1.0"
+            },
+            "suggest": {
+                "alcaeus/mongo-php-adapter": "Required to use legacy MongoDB driver"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.9.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\Cache\\": "lib/Doctrine/Common/Cache"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "PHP Doctrine Cache library is a popular cache implementation that supports many different drivers such as redis, memcache, apc, mongodb and others.",
+            "homepage": "https://www.doctrine-project.org/projects/cache.html",
+            "keywords": [
+                "abstraction",
+                "apcu",
+                "cache",
+                "caching",
+                "couchdb",
+                "memcached",
+                "php",
+                "redis",
+                "riak",
+                "xcache"
+            ],
+            "time": "2019-11-15T14:31:57+00:00"
+        },
+        {
+            "name": "doctrine/lexer",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/lexer.git",
+                "reference": "5242d66dbeb21a30dd8a3e66bf7a73b66e05e1f6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/lexer/zipball/5242d66dbeb21a30dd8a3e66bf7a73b66e05e1f6",
+                "reference": "5242d66dbeb21a30dd8a3e66bf7a73b66e05e1f6",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^6.0",
+                "phpstan/phpstan": "^0.11.8",
+                "phpunit/phpunit": "^8.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\Lexer\\": "lib/Doctrine/Common/Lexer"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "PHP Doctrine Lexer parser library that can be used in Top-Down, Recursive Descent Parsers.",
+            "homepage": "https://www.doctrine-project.org/projects/lexer.html",
+            "keywords": [
+                "annotations",
+                "docblock",
+                "lexer",
+                "parser",
+                "php"
+            ],
+            "time": "2019-10-30T14:39:59+00:00"
+        },
         {
             "name": "equip/dispatch",
             "version": "2.0.0",
@@ -586,6 +799,38 @@
             "time": "2019-11-05T20:36:33+00:00"
         },
         {
+            "name": "orbiter/annotations-util",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bemit/orbiter-annotations-util.git",
+                "reference": "9285909a8a857a73f1a30af61a8dfb3427c3699b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bemit/orbiter-annotations-util/zipball/9285909a8a857a73f1a30af61a8dfb3427c3699b",
+                "reference": "9285909a8a857a73f1a30af61a8dfb3427c3699b",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "^1.6",
+                "doctrine/cache": "^1.7",
+                "php": ">=7.1",
+                "scaleupstack/reflection": "^1.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Orbiter\\AnnotationsUtil\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "time": "2019-11-21T22:41:03+00:00"
+        },
+        {
             "name": "orbiter/middleware-twig",
             "version": "dev-master",
             "source": {
@@ -617,16 +862,16 @@
         },
         {
             "name": "orbiter/satellite",
-            "version": "dev-master",
+            "version": "0.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bemit/satellite.git",
-                "reference": "62bd74adad74a4282761a08bf40bc64679980d21"
+                "reference": "ce78c11a81fc923626d806e7bc71b4d01ac11880"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bemit/satellite/zipball/62bd74adad74a4282761a08bf40bc64679980d21",
-                "reference": "62bd74adad74a4282761a08bf40bc64679980d21",
+                "url": "https://api.github.com/repos/bemit/satellite/zipball/ce78c11a81fc923626d806e7bc71b4d01ac11880",
+                "reference": "ce78c11a81fc923626d806e7bc71b4d01ac11880",
                 "shasum": ""
             },
             "require": {
@@ -636,6 +881,7 @@
                 "psr/event-dispatcher": "^1.0"
             },
             "suggest": {
+                "orbiter/annotations-util": "Easy setup of doctrine/annotations with cached reflections",
                 "orbiter/satellite-console": "SystemLaunch Event Handler, adds CLI based on GetOpt",
                 "orbiter/satellite-di": "SystemLaunch Event Handler, adds DI based on PHP-DI, implements PSR-11",
                 "orbiter/satellite-response": "Middleware Pipe, Dispatcher and Emitter, compatible with PSR-7,15,17",
@@ -653,20 +899,20 @@
                 "MIT"
             ],
             "description": "Easy to use Event & Middleware Mini-Framework, powered by popular projects and PSR's",
-            "time": "2019-11-20T23:01:00+00:00"
+            "time": "2019-11-21T22:51:45+00:00"
         },
         {
             "name": "orbiter/satellite-console",
-            "version": "dev-master",
+            "version": "0.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bemit/satellite-console.git",
-                "reference": "797b1f084abcf4da5bfab15d996b0c39967d4792"
+                "reference": "41e8b63123c80b69f27463c651f5d7ea7431e330"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bemit/satellite-console/zipball/797b1f084abcf4da5bfab15d996b0c39967d4792",
-                "reference": "797b1f084abcf4da5bfab15d996b0c39967d4792",
+                "url": "https://api.github.com/repos/bemit/satellite-console/zipball/41e8b63123c80b69f27463c651f5d7ea7431e330",
+                "reference": "41e8b63123c80b69f27463c651f5d7ea7431e330",
                 "shasum": ""
             },
             "require": {
@@ -685,24 +931,23 @@
             "license": [
                 "MIT"
             ],
-            "time": "2019-11-20T22:57:59+00:00"
+            "time": "2019-11-21T22:48:30+00:00"
         },
         {
             "name": "orbiter/satellite-di",
-            "version": "dev-master",
+            "version": "0.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bemit/satellite-di.git",
-                "reference": "22e2a75192d822ac8f8ab15d6bf7f53ebe896e8a"
+                "reference": "02da17e69aa220cf07c075f7a16ad477c0b0bfb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bemit/satellite-di/zipball/22e2a75192d822ac8f8ab15d6bf7f53ebe896e8a",
-                "reference": "22e2a75192d822ac8f8ab15d6bf7f53ebe896e8a",
+                "url": "https://api.github.com/repos/bemit/satellite-di/zipball/02da17e69aa220cf07c075f7a16ad477c0b0bfb0",
+                "reference": "02da17e69aa220cf07c075f7a16ad477c0b0bfb0",
                 "shasum": ""
             },
             "require": {
-                "orbiter/satellite": "*",
                 "php": ">=7.0",
                 "php-di/php-di": "^6.0.0",
                 "psr/container": "^1.0"
@@ -717,12 +962,12 @@
             "license": [
                 "MIT"
             ],
-            "description": "DI Registration for Satellite",
-            "time": "2019-11-20T22:54:06+00:00"
+            "description": "DI Utility",
+            "time": "2019-11-21T22:47:52+00:00"
         },
         {
             "name": "orbiter/satellite-response",
-            "version": "dev-master",
+            "version": "0.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bemit/satellite-response.git",
@@ -760,16 +1005,16 @@
         },
         {
             "name": "orbiter/satellite-route",
-            "version": "dev-master",
+            "version": "0.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bemit/satellite-route.git",
-                "reference": "b1b3dc471f7be2ab6df4cf2f4e6fe3df4387368d"
+                "reference": "f634dfd1ef19f45d5cfb6d2f74793d1bc4b707bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bemit/satellite-route/zipball/b1b3dc471f7be2ab6df4cf2f4e6fe3df4387368d",
-                "reference": "b1b3dc471f7be2ab6df4cf2f4e6fe3df4387368d",
+                "url": "https://api.github.com/repos/bemit/satellite-route/zipball/f634dfd1ef19f45d5cfb6d2f74793d1bc4b707bb",
+                "reference": "f634dfd1ef19f45d5cfb6d2f74793d1bc4b707bb",
                 "shasum": ""
             },
             "require": {
@@ -793,7 +1038,7 @@
             "license": [
                 "MIT"
             ],
-            "time": "2019-11-20T22:55:47+00:00"
+            "time": "2019-11-21T08:02:43+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -1342,6 +1587,98 @@
             "time": "2018-10-30T17:12:04+00:00"
         },
         {
+            "name": "scaleupstack/assert",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/scaleupstack/assert.git",
+                "reference": "bb4ba6fb8910ecd2f6d3edff0b0e810a476f5b9e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/scaleupstack/assert/zipball/bb4ba6fb8910ecd2f6d3edff0b0e810a476f5b9e",
+                "reference": "bb4ba6fb8910ecd2f6d3edff0b0e810a476f5b9e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0",
+                "webmozart/assert": "^1."
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ScaleUpStack\\Assert\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Nunninger",
+                    "email": "thomas.nunninger@scaleupventures.com"
+                }
+            ],
+            "description": "A tiny wrapper around webmozart/assert that is easily extendable to throw project-specific assertions.",
+            "keywords": [
+                "assert",
+                "assertion",
+                "check",
+                "validation"
+            ],
+            "time": "2019-09-03T08:05:04+00:00"
+        },
+        {
+            "name": "scaleupstack/reflection",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/scaleupstack/reflection.git",
+                "reference": "bae28817b0e44124bc5f364c43617b9606b8f7fb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/scaleupstack/reflection/zipball/bae28817b0e44124bc5f364c43617b9606b8f7fb",
+                "reference": "bae28817b0e44124bc5f364c43617b9606b8f7fb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0",
+                "scaleupstack/assert": "^1."
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ScaleUpStack\\Reflection\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Nunninger",
+                    "email": "thomas.nunninger@scaleupventures.com"
+                }
+            ],
+            "description": "A performance-improved and convenient way to deal with PHP Reflection.",
+            "keywords": [
+                "cache",
+                "caching",
+                "performance",
+                "reflection"
+            ],
+            "time": "2019-09-03T08:28:23+00:00"
+        },
+        {
             "name": "symfony/polyfill-ctype",
             "version": "v1.12.0",
             "source": {
@@ -1732,6 +2069,56 @@
                 "environment"
             ],
             "time": "2019-09-10T21:37:39+00:00"
+        },
+        {
+            "name": "webmozart/assert",
+            "version": "1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webmozart/assert.git",
+                "reference": "88e6d84706d09a236046d686bbea96f07b3a34f4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webmozart/assert/zipball/88e6d84706d09a236046d686bbea96f07b3a34f4",
+                "reference": "88e6d84706d09a236046d686bbea96f07b3a34f4",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3 || ^7.0",
+                "symfony/polyfill-ctype": "^1.8"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.36 || ^7.5.13"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Webmozart\\Assert\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bernhard Schussek",
+                    "email": "bschussek@gmail.com"
+                }
+            ],
+            "description": "Assertions to validate method input/output with nice error messages.",
+            "keywords": [
+                "assert",
+                "check",
+                "validate"
+            ],
+            "time": "2019-08-24T08:43:50+00:00"
         }
     ],
     "packages-dev": [
@@ -2150,16 +2537,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v4.3.8",
+            "version": "v4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "ea4940845535c85ff5c505e13b3205b0076d07bf"
+                "reference": "eade2890f8b0eeb279b6cf41b50a10007294490f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/ea4940845535c85ff5c505e13b3205b0076d07bf",
-                "reference": "ea4940845535c85ff5c505e13b3205b0076d07bf",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/eade2890f8b0eeb279b6cf41b50a10007294490f",
+                "reference": "eade2890f8b0eeb279b6cf41b50a10007294490f",
                 "shasum": ""
             },
             "require": {
@@ -2173,9 +2560,9 @@
             },
             "require-dev": {
                 "ext-iconv": "*",
-                "symfony/console": "~3.4|~4.0",
-                "symfony/process": "~3.4|~4.0",
-                "twig/twig": "~1.34|~2.4"
+                "symfony/console": "^3.4|^4.0|^5.0",
+                "symfony/process": "^4.4|^5.0",
+                "twig/twig": "^1.34|^2.4|^3.0"
             },
             "suggest": {
                 "ext-iconv": "To convert non-UTF-8 strings to UTF-8 (or symfony/polyfill-iconv in case ext-iconv cannot be used).",
@@ -2188,7 +2575,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.3-dev"
+                    "dev-master": "4.4-dev"
                 }
             },
             "autoload": {
@@ -2222,17 +2609,12 @@
                 "debug",
                 "dump"
             ],
-            "time": "2019-10-13T12:02:04+00:00"
+            "time": "2019-11-12T14:51:11+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "orbiter/satellite": 20,
-        "orbiter/satellite-route": 20,
-        "orbiter/satellite-di": 20,
-        "orbiter/satellite-console": 20,
-        "orbiter/satellite-response": 20,
         "orbiter/middleware-twig": 20,
         "roave/security-advisories": 20,
         "orbiter/satellite-whoops": 20
@@ -2240,7 +2622,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2"
+        "php": ">=7.3"
     },
     "platform-dev": []
 }
