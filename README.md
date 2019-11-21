@@ -50,7 +50,7 @@ Open your browser on: http://localhost:3333
 Look into files:
 
 - `_commands.php` - define console commands, see [getopt-php](https://github.com/getopt-php/getopt-php) on command details
-- `_routes.php` - define routes, see [nikic/fast-route](https://github.com/nikic/FastRoute) for info about paths and callables
+- `_routes.php` - define routes, see [nikic/fast-route](https://github.com/nikic/FastRoute) for info about paths syntax, see [routing](#feature-routing) for how to register routes in Satellite
 - `_launch.php` - add events to the flow and modify middlewares
 
 Everything else is up to you!
@@ -135,10 +135,12 @@ This app serves as mini-framework and exemplary of how to put together a custom 
 
 It is build upon [PSRs](https://www.php-fig.org/psr/) and popular (specialized) packages implementing them or other great stuff.
 
+- **PSR-3** - Logger *(todo)*
 - **PSR-4** - autoloading classes and forget require
     - handled by composer, more in [composer docs.](https://getcomposer.org/doc/01-basic-usage.md#autoloading)
 - **PSR-1,12** - Code Style Guides
     - but we break the brackets location rule, same-line instead of next-list for opening `{`
+- **PSR-6** - Cache *(todo)*
 - **PSR-7** - HTTP Message
     - request and response data definitions
 - **PSR-11** - Container for InterOp
@@ -150,14 +152,14 @@ It is build upon [PSRs](https://www.php-fig.org/psr/) and popular (specialized) 
 - **PSR-17** - HTTP Factories are used but not all features are wired (partly)
     - create context about request
     - useful for uploads and streams
-- **PSR-18** - HTTP Client (todo)
+- **PSR-18** - HTTP Client *(todo)*
 
 In Orbiter those packages are bundling core logic:
 
 - `orbiter/satellite`
     - the core + event handler
     - implements **PSR-14** Event Dispatcher and Listener
-    - with invoker to execute anything, PSR-11 compatible
+    - with invoker to execute anything, **PSR-11** compatible
     - with singleton `Satellite\Event` to register and dispatch events
     - origin of `SystemLaunchEvent`
     - see [Events](#feature-events)
@@ -168,13 +170,13 @@ In Orbiter those packages are bundling core logic:
     - see [Console](#feature-console)
 - `orbiter/satellite-response`
     - middleware pipe execution
-    - implements **PSR-15** through `equip/dispatch`, **PSR-11 compliant**
+    - implements **PSR-15** through `equip/dispatch`, **PSR-11** compliant
     - with simple emitter by `narrowspark/http-emitter`
     - see [Middleware](#feature-middleware) 
 - `orbiter/satellite-route`
     - routing execution
     - uses [nikic/fast-route](https://github.com/nikic/FastRoute) as router
-    - special factory like generation syntax for routes
+    - special generation syntax for routes
     - implements **PSR-7,17** through `nyholm/psr7` and `nyholm/psr7-server` 
     - see [Routing](#feature-routing)
 - `orbiter/satellite-di`
@@ -349,9 +351,11 @@ The integrated routing library is build upon [nikic/fast-route](https://github.c
 
 This describing interface leverages the vocabulary from nikic.
 
-Any route must receive a callable that is a PSR-15 valid handler, when [DI](#feature-di) is added it further on get's dependencies injected.
+Any route must receive a callable that is a **PSR-15** valid handler.
 
-The `Router` stores all routes during boot and launch and registers them to FastRoute. Later on int the [Middlewares](#feature-middleware) the router matching the routes and the output is displayed.
+When [DI](#feature-di) is added, the handler can be any valid callable/container-resolvable and the DI creates the objects with injected dependencies.
+
+The `KernelRoute\Router` stores all routes during boot and launch and registers them to FastRoute. Later on in the [Middlewares](#feature-middleware) the router matching the routes and the output is displayed.
 
 ```php
 <?php
@@ -366,6 +370,7 @@ Router::addRoute(string $id, string $method, string $route, callable $handler);
 // Adds a group of routes, all get the same prefix before their route
 Router::addGroup(string $id, string $prefix, array $routes);
 
+//
 // these must be used inside of `addGroup`
 Router::get(string $route, callable $handler);
 Router::post(string $route, callable $handler);
@@ -386,24 +391,36 @@ use Psr\Http\Server\RequestHandlerInterface;
 Router::addRoute(
     'home',// id
     'GET',// method: GET, POST, PUT, DELETE
-    '/',// path like FastRoute supports // todo: add link
+    '/',// path like FastRoute supports, https://github.com/nikic/FastRoute#defining-routes
     // a PSR compatible handler
     static function(ServerRequestInterface $request, RequestHandlerInterface $handler) {
-        // Output like `RequestHandler` supports // todo: add link
+       
+        // when using: middlewares/request-handler
+
+        // echo output will get captured and written into body
+        echo '<!doctype HTML><html><h2 style="font-family: sans-serif">Satellite 🛰️</h2></html>';
+
+        // return a string and it gets written into body
         return '<!doctype HTML><html><h2 style="font-family: sans-serif">Satellite 🛰️</h2></html>';
+        
+        // or in general:
 
-        // or e.g. use the `Respond::json` utility to build some api output including headers
-        return Respond::json(['Demo', 'Data', 'As', 'JSON'], $request, $handler);
+        // .. do stuff and add to arguments
 
-        // or do something else
-        // ...
-
-        // execute lower, may be returned directly
+        //  execute lower
         $response = $handler->handle($request);
 
-        // or change something and return
+        // .. add content from this middleware to body
+        $body = $response->getBody();
+        $str = 'Hey!';
+        if($str !== '' && $body->isWritable()) {
+            $body->write($str);
+        }
+        
+        // maybe add headers
         $response = $response->withHeader('Content-Type', 'application/json');
-
+    
+        // and return response
         return $response;
     }
 );
@@ -431,16 +448,26 @@ Router::addGroup(
         'v1' => Router::group('/v1', [])
     ]
 );
+```
 
-``` 
+##### Cached Router
+
+Enable the cached router before the launch event, `string` with path to file or `null`. Default is off (`null`).
+
+```php
+<?php
+use Satellite\KernelRoute\Router;
+
+Router::setCache(getenv('env') === 'prod' ? __DIR__ . '/tmp/route.cache' : null);
+```
 
 #### Feature Middleware
 
-Routing requests to execution is handled by a PSR-15 compatible Middleware pipe. Use [any middleware](https://github.com/middlewares/awesome-psr15-middlewares) to easily add complex logic.
+Routing requests to execution is handled by a **PSR-15** compatible Middleware pipe. Use [any middleware](https://github.com/middlewares/awesome-psr15-middlewares) to easily add complex logic.
 
 Satellite provides a pipe that makes it easy to add and configure middlewares.
 
-The pipe must be created inside a `RouteEvent` handler to consume the `request` and `router` created by `orbiter/satellite-route`
+The pipe must be created inside a `RouteEvent` handler to consume the `request` and `router` created by `orbiter/satellite-route` - or use your preferred **PSR-7,17** libs and **PSR-15** router-middleware.
 
 ```php
 <?php
@@ -477,7 +504,7 @@ Execute PHP code from the commandline, register commands before or during launch
 - `php cli <command> <..attr> <..b>`
 - like: `php cli version` or `php cli help`
 
-Register a command and automatically register it to the app:
+Create a command and automatically register it to the app:
 
 ```php
 <?php
@@ -516,7 +543,7 @@ php cli hi Folks
 # prints: Hi Folks!
 ```
 
-Register a command natively and register it manually to the app:
+Create a command natively and register it manually to the app:
 
 ```php
 <?php
@@ -547,9 +574,9 @@ For more details on how to use `GetOpt` to build commands with more details, opt
 
 ### Feature DI
 
-Satellite is PSR-11 compatible and can be used with any Dependency Injection libray.
+Satellite is **PSR-11** compatible and can be used with any Dependency Injection libray.
 
-> Take note on the [optimized TypeHintContainerResolver](https://github.com/bemit/satellite/blob/master/src/Event/EventDispatcherTypeHintContainerResolver.php) for mixed annotated static and injected params. This is used in `Event`'s invoke system.
+> Take note on the [optimized TypeHintContainerResolver](https://github.com/bemit/satellite/blob/master/src/Event/EventDispatcherTypeHintContainerResolver.php) for mixed typehinted static and injected params. This is used in `Event`'s invoke system.
 
 Register a container to `Event` and it is accessible in every event handler.
 
@@ -572,7 +599,7 @@ try {
 }
 ```
 
-To enable the DI now also for the middleware request handler, annotate it at `RouteEvent` handler.
+To enable the DI now also for the middleware request handler, type hint it at `RouteEvent` handler.
 
 ```php
 <?php

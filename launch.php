@@ -21,6 +21,7 @@ Event::on(ConsoleEvent::class, static function($evt) {
     return new Event\Delegate($evt->handler, $evt);
 });
 
+Router::setCache(getenv('env') === 'prod' ? __DIR__ . '/tmp/route.cache' : null);
 Event::on(SystemLaunchEvent::class, [Router::class, 'handle',]);
 
 Event::on(RouteEvent::class, static function(RouteEvent $resp, Psr\Container\ContainerInterface $container) {
