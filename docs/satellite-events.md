@@ -8,7 +8,7 @@ These Events are used through the default Satellite framework to integrate all p
 
 ## SystemLaunchEvent
 
-Originates from [orbiter/satellite](https://github.com/bemit/satellite) and is used to add logic peaces able to handle the initial run.
+Originates from [orbiter/satellite](https://github.com/bemit/satellite) and is used to add logic pieces able to handle the initial run.
 
 It is useful for e.g. adding the console and route feature or general setup tasks.
 

@@ -29,7 +29,7 @@ Easy to use Event & Middleware Framework, powered by popular micro-libraries and
     - [Annotations](docs/#setup-annotations)
 - Extend
     - replace [System Event](docs/satellite-events.md) handlers
-    - extend/replace the core [Event Dispatcher or Invoker](docs/extend-event-dispatcher-or-invoker)
+    - extend/replace the core [Event Dispatcher or Invoker](docs/#extend-event-dispatcher-or-invoker)
 - [Download Build](#download-build)
 - [License](#license)
 
@@ -169,9 +169,9 @@ It is build upon [PSRs](https://www.php-fig.org/psr/) and popular, specialized p
 
 For Satellite are optimized packages that each on is own encapsulates one system part.
 
-Only the event core is needed, all other packages can be replaced with any PSR implementation.
+Only the event core is needed, most packages can be replaced with any PSR implementation or another framework or nothing at all.
 
-To integrate fully into Satellite, replacements must implement handling the dispatched event instead of the package that would normally handle the execution and encapsulates the dependencies.
+To integrate fully into Satellite, replacements of core events must implement handling the dispatched event instead of the package that would normally handle the execution and encapsulates the dependencies.
 
 - `orbiter/satellite`
     - the core + event handler
