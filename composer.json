@@ -3,7 +3,7 @@
   "license": "MIT",
   "description": "Easy to use Event & Middleware Mini-Framework, powered by popular projects and PSR's",
   "require": {
-    "php": ">=7.2",
+    "php": ">=7.3",
     "psr/event-dispatcher": "^1.0",
     "psr/http-server-middleware": "^1.0",
     "psr/http-server-handler": "^1.0",

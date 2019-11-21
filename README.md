@@ -14,7 +14,7 @@
  
 ```
 
-Easy to use Event & Middleware Framework, powered by popular micro-libraries and based on PSRs.
+Easy to use Event & Middleware Framework, powered by popular micro-libraries and based on [PSRs](https://www.php-fig.org/psr/).
 
 - [Setup](#setup)
     - [Config](#config)
@@ -28,7 +28,7 @@ Easy to use Event & Middleware Framework, powered by popular micro-libraries and
 - [Download Build](#download-build)
 - [License](#license)
 
-Requires PHP 7.2+ and [composer](https://getcomposer.org/)
+Requires PHP 7.3+ and [composer](https://getcomposer.org/)
 
 ## TL;DR
 
@@ -57,12 +57,12 @@ Everything else is up to you!
 
 ## Setup
 
-```bash
+Install app skeleten and dependencies with composer:
 
-composer create-project orbiter/satellite-app ./satellite
+```bash
+composer create-project orbiter/satellite-app satellite
 
 cd ./satellite
- 
 ```
 
 ### Linux, PHP Dev Server
@@ -94,7 +94,7 @@ Includes configurable PHP Dockerfile with:
 - Apache Mods: rewrite, deflate, brotli
 - customize in [Dockerfile](Dockerfile)
 
-Configs are system defaults, see files `docker-*`
+Configs are system originals, see files `docker-*` amd their respective docs.
 
 Start containers specified in `docker-compose.yml`, then open: http://localhost:3333
 
@@ -111,8 +111,6 @@ composer require monolog/monolog
 
 On a web-server the `web/index.php` file serves as public entry point.
 
-Of cause the CLI could be used in e.g. crons on the production server, in CI during build - but **don't use** `server.php` as production entry point.
-
 - Apache: point server/vhost root to `/web` and use the included `.htaccess`
 - nginx directive:
 
@@ -124,6 +122,8 @@ location / {
     try_files $uri /index.php$is_args$args;
 }
 ```
+
+> The CLI could be used in e.g. crons on the production server, in CI during build - but **don't use** `server.php` as production entry point.
 
 ### Config
 
@@ -141,11 +141,12 @@ It is build upon [PSRs](https://www.php-fig.org/psr/) and popular (specialized) 
     - but we break the brackets location rule, same-line instead of next-list for opening `{`
 - **PSR-7** - HTTP Message
     - request and response data definitions
-- **PSR-11** - Container for InterOp (todo)
+- **PSR-11** - Container for InterOp
+    - full support for any compliant container
 - **PSR-14** - Events and Listeners
     - as the core of how things are put together
 - **PSR-15** - HTTP Handlers
-    - handling requests with executing the middlewares
+    - handling requests with executing the middleware pipe
 - **PSR-17** - HTTP Factories are used but not all features are wired (partly)
     - create context about request
     - useful for uploads and streams
@@ -155,7 +156,7 @@ In Orbiter those packages are bundling core logic:
 
 - `orbiter/satellite`
     - the core + event handler
-    - implements PSR-14 Event Dispatcher and Listener
+    - implements **PSR-14** Event Dispatcher and Listener
     - with invoker to execute anything, PSR-11 compatible
     - with singleton `Satellite\Event` to register and dispatch events
     - origin of `SystemLaunchEvent`
@@ -167,18 +168,18 @@ In Orbiter those packages are bundling core logic:
     - see [Console](#feature-console)
 - `orbiter/satellite-response`
     - middleware pipe execution
-    - implements PSR-15 through `equip/dispatch`, PSR-11 compliant
+    - implements **PSR-15** through `equip/dispatch`, **PSR-11 compliant**
     - with simple emitter by `narrowspark/http-emitter`
     - see [Middleware](#feature-middleware) 
 - `orbiter/satellite-route`
     - routing execution
     - uses [nikic/fast-route](https://github.com/nikic/FastRoute) as router
     - special factory like generation syntax for routes
-    - implements PSR-7,17 through `nyholm/psr7` and `nyholm/psr7-server` 
+    - implements **PSR-7,17** through `nyholm/psr7` and `nyholm/psr7-server` 
     - see [Routing](#feature-routing)
 - `orbiter/satellite-di`
     - dependency injection
-    - implements PSR-11 through [php-di](http://php-di.org)
+    - implements **PSR-11** through [php-di](http://php-di.org)
     - see [DI](#feature-di)
 - `orbiter/satellite-whoops`
     - Whoops error display for CLI and Routes
@@ -192,7 +193,7 @@ Satellite integrates into a micro framework to rapidly build PHP server apps, mo
 
 ### Feature Events
 
-At the core is an event system that controls the flow of satellite and lets you extend it easily.
+At the core is an event system that controls the flow of Satellite and lets you extend it easily.
 
 Building event pipes and connecting your contexts through domain-oriented events makes it easy to build scalable and useful business software.
 
@@ -215,7 +216,7 @@ Event::dispatcher(): EventDispatcherInterface;
 
 #### Event Listener
 
-As example we use the only included event `Satellite\SystemLaunchEvent`, this get's triggered when you start satellite, no matter from where.
+As example we use the event `Satellite\SystemLaunchEvent`, this get's triggered when you `launch()` Satellite, no matter from where.
 
 ```php
 <?php
@@ -241,7 +242,8 @@ Event::on(SystemLaunchEvent::class, static function(SystemLaunchEvent $launch) {
 With `Delegate` it is possible to create an e.g. handler out of data and then letting `Event` handle the real execution.
 
 > The `handler` in an delegation is free to return either the event or nothing.
-> If nothing the event of `Delegate` is pushed to the following handlers.
+>
+> If nothing the event of `Delegate` is pushed to the next handlers.
 
 ```php
 <?php
@@ -378,8 +380,8 @@ Router::group(string $prefix, array $routes);// for nested groups
 
 use Satellite\KernelRoute\Router;
 use Satellite\Response\Respond;
-use \Psr\Http\Message\ServerRequestInterface;
-use \Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 Router::addRoute(
     'home',// id
@@ -457,12 +459,12 @@ Event::on(RouteEvent::class, static function(RouteEvent $resp) {
     $pipe->with($resp->router);// any compatible MiddlewareInterface router is possible
 
     // add the request handler middleware after the router, this executes the matched handler from router
-    $pipe->with(new \Middlewares\RequestHandler());
+    $pipe->with(new Middlewares\RequestHandler());
     
     // ... add here e.g. middleware that decorates the handler
 
     // push the request - this triggers the entire pipe, sends headers and displays any output
-    $pipe->emit($resp->request);// use any \Psr\Http\Message\ServerRequestInterface
+    $pipe->emit($resp->request);// use any Psr\Http\Message\ServerRequestInterface
 
     return $resp;
 });
@@ -483,7 +485,7 @@ use Satellite\KernelConsole\Command;
 use Satellite\KernelConsole\ConsoleEvent;
 
 /**
- * @var \GetOpt\Command $command
+ * @var GetOpt\Command $command
  */
 $command = Command::create(
     'hi',
@@ -500,7 +502,7 @@ $command = Command::create(
 );
 
 $command->addOperands([
-    new \GetOpt\Operand('name', \GetOpt\Operand::OPTIONAL),
+    new GetOpt\Operand('name', GetOpt\Operand::OPTIONAL),
 ]);
 ```
 
@@ -522,7 +524,7 @@ Register a command natively and register it manually to the app:
 use Satellite\KernelConsole\Console;
 use Satellite\KernelConsole\ConsoleEvent;
 
-$command = new \GetOpt\Command(
+$command = new GetOpt\Command(
     'hi', // name
     static function(ConsoleEvent $evt) {
          error_log('Hi ' .
@@ -535,7 +537,7 @@ $command = new \GetOpt\Command(
 );
 
 $command->addOperands([
-    new \GetOpt\Operand('name', \GetOpt\Operand::OPTIONAL),
+    new GetOpt\Operand('name', GetOpt\Operand::OPTIONAL),
 ]);
 
 Console::addCommand('hi', $command);
