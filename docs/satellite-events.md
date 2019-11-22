@@ -1,6 +1,18 @@
 # Events dispatched by Orbiter\Satellite 🛰️
 
-The whole satellite system communicates inter-code with events that are dispatched somewhere, data is added, one of the listeners executing the logic needed to be done to handle the event.
+- [Setup](../README.md#setup)
+    - [Config](../README.md#config)
+- [Implemented PSRs](../README.md#psrs)
+- [Used Packages](../README.md#used-packages)
+- [Features](README.md)
+    - [Events](feature-events.md)
+    - [Routing](feature-routing.md)
+        - [Middleware](feature-middleware.md)
+    - [Console](feature-console.md)
+    - [DI](feature-di.md)
+- [System Default Events](satellite-events.md)
+
+Satellite system communicates inter-code [with events](feature-events.md) that are dispatched somewhere, data is added, one of the listeners executing the logic needed to be done to handle the event.
 
 These Events are used through the default Satellite framework to integrate all parts:
 

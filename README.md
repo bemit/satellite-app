@@ -156,7 +156,10 @@ It is build upon [PSRs](https://www.php-fig.org/psr/) and popular, specialized p
     - request and response data definitions
 - **PSR-11** - Container for InterOp
     - full support for any compliant container
-- **PSR-14** - apt ges and Listeners
+    - use in console command handlers
+    - use in event handlers
+    - use in middleware handlers
+- **PSR-14** - Event Dispatcher and Listener
     - as the core of how things are put together
 - **PSR-15** - HTTP Handlers
     - handling requests with executing the middleware pipe
@@ -167,7 +170,7 @@ It is build upon [PSRs](https://www.php-fig.org/psr/) and popular, specialized p
 
 ## Used Packages
 
-For Satellite are optimized packages that each on is own encapsulates one system part.
+Orbiter has optimized packages, each encapsulates one system part or extension.
 
 Only the event core is needed, most packages can be replaced with any PSR implementation or another framework or nothing at all.
 
@@ -232,7 +235,7 @@ See: [LICENSE](LICENSE).
 
 ### Contributors
 
-By committing your code to the code repository you agree to release the code under the MIT License attached to the repository without the expectation of consideration.
+By committing your code to the code repository you agree to release the code under the MIT License attached to the repository.
 
 ***
 

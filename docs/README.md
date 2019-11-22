@@ -1,19 +1,21 @@
 # Orbiter\Satellite Features 🛰️
 
-- [Setup](../#setup)
-    - [Config](../#config)
-- [Implemented PSRs](../#psrs)
-- [Used Packages](../#used-packages)
+- [Setup](../README.md#setup)
+    - [Config](../README.md#config)
+- [Implemented PSRs](../README.md#psrs)
+- [Used Packages](../README.md#used-packages)
 
 Satellite integrates into a micro framework to rapidly build PHP server apps, mostly - but not limited - for non-human clients.
 
-The features are supplied by different packages:
+The features are supplied by different packages, swappable through Events and Container:
 
-- [Events](feature-events.md)
-- [Routing](feature-routing.md)
-    - [Middleware](feature-middleware.md)
-- [Console](feature-console.md)
-- [DI](feature-di.md)
+- [Features](README.md)
+    - [Events](feature-events.md)
+    - [Routing](feature-routing.md)
+        - [Middleware](feature-middleware.md)
+    - [Console](feature-console.md)
+    - [DI](feature-di.md)
+- [System Default Events](satellite-events.md)
 
 ## Setup Annotations
 
@@ -23,7 +25,7 @@ We recommend using [Orbiter\AnnotationUtil](https://github.com/bemit/orbiter-ann
 
 To extend the core `Satellite\Event` define another class that should be generated as singleton.
 
-This let's your control fully what event dispatcher and event lister will be used.
+This lets you control fully what event dispatcher and event listener will be used.
 
 - `Satellite\Event` implements `Satellite\EventStoreSingleton`
 - `Satellite\EventDispatcher` implements `Psr\EventDispatcher\EventDispatcherInterface`, PSR-14

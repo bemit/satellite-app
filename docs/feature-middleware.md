@@ -1,16 +1,16 @@
 # Middleware Pipe for Orbiter\Satellite 🛰️
 
-- [Setup](../#setup)
-    - [Config](../#config)
-- [Implemented PSRs](../#psrs)
-- [Used Packages](../#used-packages)
-
-## Features
-- [Events](feature-events.md)
-- [Routing](feature-routing.md)
-    - [Middleware](feature-middleware.md)
-- [Console](feature-console.md)
-- [DI](feature-di.md)
+- [Setup](../README.md#setup)
+    - [Config](../README.md#config)
+- [Implemented PSRs](../README.md#psrs)
+- [Used Packages](../README.md#used-packages)
+- [Features](README.md)
+    - [Events](feature-events.md)
+    - [Routing](feature-routing.md)
+        - [Middleware](feature-middleware.md)
+    - [Console](feature-console.md)
+    - [DI](feature-di.md)
+- [System Default Events](satellite-events.md)
 
 ## Feature Middleware
 
