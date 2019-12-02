@@ -1,40 +1,24 @@
 
-FROM php:7.3-apache
+FROM php:7.4.0-apache
 
 RUN apt-get update && apt-get install -yq --no-install-recommends \
-      # Basics
       wget \
       curl \
-      # Text Utils for console debug
-      vim \
-      nano \
-      # Tools
       git \
       openssl \
-      # enable ping
-      iputils-ping \
-      # enable netstat
-      net-tools \
-      # Install ppa Utils / https
-      apt-utils \
-      build-essential \
-      software-properties-common \
-      apt-transport-https \
-      ca-certificates \
-      # Others
-      gnupg2 \
-      ssh-client \
-      ssh \
-      rsync \
-      lftp \
-      unzip \
       zip \
+      unzip \
       locales \
-      ghostscript
+      libmcrypt-dev \
+      zlib1g-dev \
+      libxml2-dev \
+      libzip-dev \
+      libonig-dev
 
 RUN apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
-RUN docker-php-ext-install -j5 mbstring mysqli pdo pdo_mysql opcache
+RUN docker-php-ext-install -j$(nproc) mbstring mysqli pdo pdo_mysql opcache zip \
+        && docker-php-source delete
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -49,11 +33,18 @@ ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
     LANGUAGE=C.UTF-8
 
-ENV APACHE_DOCUMENT_ROOT /var/www/html/web
+ENV APACHE_DOCUMENT_ROOT /var/www/html
+
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
+RUN mkdir /var/www/.composer && chown -R www-data /var/www/.composer
+
 COPY docker-opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 COPY docker-vhost.conf /etc/apache2/sites-available/000-default.conf
+
+EXPOSE 80
+CMD ["apachectl", "-D", "FOREGROUND"]

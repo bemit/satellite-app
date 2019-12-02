@@ -31,7 +31,7 @@ This lets you control fully what event dispatcher and event listener will be use
 - `Satellite\EventDispatcher` implements `Psr\EventDispatcher\EventDispatcherInterface`, PSR-14
     - also implements `Satellite\Event\EventDispatcherInterface` to add PSR-11 support
 - `Satellite\EventListener` implements `Psr\EventDispatcher\ListenerProviderInterface`, PSR-14
-    - also implements `Satellite\Event\EventListenerInterface` to add PSR-11 support
+    - also implements `Satellite\Event\EventListenerInterface` with method `on` for event registration
 
 ```php
 <?php

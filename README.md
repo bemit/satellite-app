@@ -92,7 +92,7 @@ php cli <command> <..attr> <..b>
 
 Includes configurable PHP Dockerfile with:
 
-- PHP 7.3
+- PHP 7.4
 - Apache
 - OPCache
 - MySQL Client libs (pdo, pdo_mysql, mysqli)
@@ -142,7 +142,7 @@ Default's config includes:
 
 ## PSRs
 
-This app serves as mini-framework, with PSR powered libraries and not much more.
+This app serves as mini-framework, with PSR powered libraries, ready-to-use Annotations and not much more.
 
 It is build upon [PSRs](https://www.php-fig.org/psr/) and popular, specialized packages implementing them or other great stuff.
 
@@ -172,9 +172,7 @@ It is build upon [PSRs](https://www.php-fig.org/psr/) and popular, specialized p
 
 Orbiter has optimized packages, each encapsulates one system part or extension.
 
-Only the event core is needed, most packages can be replaced with any PSR implementation or another framework or nothing at all.
-
-To integrate fully into Satellite, replacements of core events must implement handling the dispatched event instead of the package that would normally handle the execution and encapsulates the dependencies.
+Most packages can be replaced with any PSR implementation or another framework or nothing at all.
 
 - `orbiter/satellite`
     - the core + event handler
@@ -185,6 +183,7 @@ To integrate fully into Satellite, replacements of core events must implement ha
     - see [Events](docs/feature-events.md)
 - `orbiter/satellite-console`
     - console execution
+    - console command annotations
     - origin of [ConsoleEvent](docs/satellite-events.md#consoleevent)
     - uses [getopt-php](https://github.com/getopt-php/getopt-php)
     - see [Console](docs/feature-console.md)
