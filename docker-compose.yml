@@ -11,6 +11,8 @@ services:
       - "3333:80"
     volumes:
       - ./:/var/www/html
+    tmpfs:
+      - /tmp/php-opcache
 
   mailhog:
     container_name: mailhog_satellite

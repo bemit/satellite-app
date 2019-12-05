@@ -42,6 +42,9 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 RUN mkdir /var/www/.composer && chown -R www-data /var/www/.composer
 
+# docker tmpfs mount target for opcache in ram under unix
+RUN mkdir /tmp/php-opcache && chown -R www-data /tmp/php-opcache
+
 COPY docker-opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 COPY docker-vhost.conf /etc/apache2/sites-available/000-default.conf

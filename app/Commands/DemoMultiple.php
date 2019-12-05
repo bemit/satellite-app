@@ -27,7 +27,6 @@ class DemoMultiple {
      *          @CommandOperand(name="name", description="the name to welcome")
      *     }
      * )
-     * @package Commands
      */
     public function handleWelcome() {
         error_log(($this->console->getOptions()['formal'] ? 'Hello ' : 'Hi ') . (isset($this->console->getOperands()[0]) ? $this->console->getOperands()[0] : 'there') . '!');
@@ -35,7 +34,6 @@ class DemoMultiple {
 
     /**
      * @Command(name="demo:bye")
-     * @package Commands
      */
     public function handleBye() {
         error_log('Bye ' . (isset($this->console->getOperands()[0]) ? $this->console->getOperands()[0] : 'there') . '!');

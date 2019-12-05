@@ -1,12 +1,24 @@
 <?php
 
-use Satellite\KernelRoute\Router;
-use Satellite\Response\Respond;
+namespace App\RouteHandler;
+
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Satellite\KernelRoute\Annotations\Route;
 
-Router::addRoute('home', 'GET', '/', static function(ServerRequestInterface $request, RequestHandlerInterface $handler) {
-    return <<<HTML
+class Home {
+
+    /**
+     * @Route(name="home", path="/", method="GET")
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Server\RequestHandlerInterface $handler
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function handle(ServerRequestInterface $request, RequestHandlerInterface $handler) {
+
+        echo <<<HTML
 <!doctype HTML>
 <html style="background: #0e1a27; color:#d5d5d5;font-family: sans-serif; text-align: center;">
     <h2 style="font-size: 2rem;">
@@ -20,20 +32,7 @@ Router::addRoute('home', 'GET', '/', static function(ServerRequestInterface $req
     </p>
 </html>
 HTML;
-});
 
-Router::addRoute('demo-json', 'GET', '/json',
-    static function(ServerRequestInterface $request, RequestHandlerInterface $handler) {
-
-        return Respond::json(['Demo', 'Data', 'As', 'JSON'], $request, $handler);
+        return $handler->handle($request);
     }
-);
-
-Router::addGroup(
-    'api', '/api',
-    [
-        'auth' => Router::post('/auth', static function() {
-
-        }),
-    ]
-);
+}

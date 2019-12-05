@@ -33,7 +33,7 @@ Easy to use Event & Middleware Framework, powered by popular micro-libraries and
 - [Download Build](#download-build)
 - [License](#license)
 
-Requires PHP 7.3+ and [composer](https://getcomposer.org/)
+Requires PHP 7.4+ and [composer](https://getcomposer.org/)
 
 ## TL;DR
 
@@ -54,9 +54,9 @@ Open your browser on: http://localhost:3333
 
 Look into files:
 
-- `_commands.php` - define console commands, see [getopt-php](https://github.com/getopt-php/getopt-php) on command details
-- `_routes.php` - define routes, see [nikic/fast-route](https://github.com/nikic/FastRoute) for info about paths syntax, see [routing](docs/feature-routing.md) for how to register routes in Satellite
-- `_launch.php` - add events to the flow and modify middlewares
+
+- `events.php` - define app components flow and middleware
+- `launch.php` - add config launch setup, DI, Annotations, first call
 
 Everything else is up to you!
 
@@ -199,16 +199,15 @@ Most packages can be replaced with any PSR implementation or another framework o
     - special generation syntax for routes
     - implements **PSR-7,17** through `nyholm/psr7` and `nyholm/psr7-server` 
     - see [Routing](docs/feature-routing.md)
-- `orbiter/satellite-di`
-    - dependency injection
-    - implements **PSR-11** through [php-di](http://php-di.org)
-    - see [DI](docs/feature-di.md)
 - `orbiter/annotations-util`
     - annotations by `doctrine/annotations` with cached reflections
     - see [AnnotationsUtil](https://github.com/bemit/orbiter-annotations-util)
 - `orbiter/satellite-whoops`
     - Whoops error display for CLI and Routes
     - only when `getenv('env')` not `prod` (configurable in `launch.php`)
+- Dependency Injection
+    - implements **PSR-11** through [php-di](http://php-di.org)
+    - see [DI](docs/feature-di.md)
     
 A lot of work is done by Utils provided by [GitHub Middlewares](https://github.com/middlewares), find more [awesome middlewares](https://github.com/middlewares/awesome-psr15-middlewares).
 

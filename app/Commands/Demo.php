@@ -16,7 +16,6 @@ use DI\Annotation\Inject;
  *          @CommandOperand(name="name", description="the name to welcome")
  *     }
  * )
- * @package Commands
  */
 class Demo {
 

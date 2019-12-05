@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9b67b97492e46fb998584691a70ac3be",
+    "content-hash": "a1da70afa9f54038144544739e70190a",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -912,16 +912,16 @@
         },
         {
             "name": "orbiter/satellite-console",
-            "version": "0.0.1",
+            "version": "0.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bemit/satellite-console.git",
-                "reference": "41e8b63123c80b69f27463c651f5d7ea7431e330"
+                "reference": "a9cb9c3eba5a9bffc1a885ae9786d4f36a7d4c22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bemit/satellite-console/zipball/41e8b63123c80b69f27463c651f5d7ea7431e330",
-                "reference": "41e8b63123c80b69f27463c651f5d7ea7431e330",
+                "url": "https://api.github.com/repos/bemit/satellite-console/zipball/a9cb9c3eba5a9bffc1a885ae9786d4f36a7d4c22",
+                "reference": "a9cb9c3eba5a9bffc1a885ae9786d4f36a7d4c22",
                 "shasum": ""
             },
             "require": {
@@ -940,39 +940,7 @@
             "license": [
                 "MIT"
             ],
-            "time": "2019-11-21T22:48:30+00:00"
-        },
-        {
-            "name": "orbiter/satellite-di",
-            "version": "0.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/bemit/satellite-di.git",
-                "reference": "02da17e69aa220cf07c075f7a16ad477c0b0bfb0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/bemit/satellite-di/zipball/02da17e69aa220cf07c075f7a16ad477c0b0bfb0",
-                "reference": "02da17e69aa220cf07c075f7a16ad477c0b0bfb0",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0",
-                "php-di/php-di": "^6.0.0",
-                "psr/container": "^1.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Satellite\\DI\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "DI Utility",
-            "time": "2019-11-21T22:47:52+00:00"
+            "time": "2019-12-05T00:50:29+00:00"
         },
         {
             "name": "orbiter/satellite-response",
@@ -1014,16 +982,16 @@
         },
         {
             "name": "orbiter/satellite-route",
-            "version": "0.0.1",
+            "version": "0.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bemit/satellite-route.git",
-                "reference": "f634dfd1ef19f45d5cfb6d2f74793d1bc4b707bb"
+                "reference": "5e47abaa8d35fbe9cabc640894a57b75bd37f039"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bemit/satellite-route/zipball/f634dfd1ef19f45d5cfb6d2f74793d1bc4b707bb",
-                "reference": "f634dfd1ef19f45d5cfb6d2f74793d1bc4b707bb",
+                "url": "https://api.github.com/repos/bemit/satellite-route/zipball/5e47abaa8d35fbe9cabc640894a57b75bd37f039",
+                "reference": "5e47abaa8d35fbe9cabc640894a57b75bd37f039",
                 "shasum": ""
             },
             "require": {
@@ -1047,7 +1015,7 @@
             "license": [
                 "MIT"
             ],
-            "time": "2019-11-21T08:02:43+00:00"
+            "time": "2019-12-05T00:49:52+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -2196,7 +2164,7 @@
         },
         {
             "name": "orbiter/satellite-whoops",
-            "version": "dev-master",
+            "version": "0.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bemit/satellite-whoops.git",
@@ -2279,12 +2247,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "9986511fcd47e8b8ec491884cc18beee1773548a"
+                "reference": "e4ee2c8e4ccd908debc64069faf023c684a76760"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/9986511fcd47e8b8ec491884cc18beee1773548a",
-                "reference": "9986511fcd47e8b8ec491884cc18beee1773548a",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e4ee2c8e4ccd908debc64069faf023c684a76760",
+                "reference": "e4ee2c8e4ccd908debc64069faf023c684a76760",
                 "shasum": ""
             },
             "conflict": {
@@ -2489,7 +2457,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2019-11-29T17:22:08+00:00"
+            "time": "2019-12-02T13:03:15+00:00"
         },
         {
             "name": "symfony/polyfill-php72",
@@ -2627,13 +2595,12 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "orbiter/middleware-twig": 20,
-        "roave/security-advisories": 20,
-        "orbiter/satellite-whoops": 20
+        "roave/security-advisories": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.3"
+        "php": ">=7.4"
     },
     "platform-dev": []
 }

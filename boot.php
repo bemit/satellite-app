@@ -12,9 +12,6 @@ if(empty(getenv('env'))) {
     putenv('env=prod');
 }
 
-require_once __DIR__ . '/_config.php';
-
-require_once __DIR__ . '/_routes.php';
-require_once __DIR__ . '/_commands.php';
+require_once __DIR__ . '/events.php';
 
 require_once __DIR__ . '/launch.php';

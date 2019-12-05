@@ -3,25 +3,25 @@
   "license": "MIT",
   "description": "Easy to use Event & Middleware Mini-Framework, powered by popular projects and PSR's",
   "require": {
-    "php": ">=7.3",
+    "php": ">=7.4",
     "psr/event-dispatcher": "^1.0",
     "psr/http-server-middleware": "^1.0",
     "psr/http-server-handler": "^1.0",
     "psr/http-message": "^1.0",
     "orbiter/satellite": "0.0.1",
-    "orbiter/satellite-route": "0.0.1",
-    "orbiter/satellite-di": "0.0.1",
-    "orbiter/satellite-console": "0.0.1",
+    "orbiter/satellite-route": "0.0.3",
+    "orbiter/satellite-console": "0.0.3",
     "orbiter/satellite-response": "0.0.1",
     "orbiter/annotations-util": "0.2.x",
     "orbiter/middleware-twig": "dev-master",
     "middlewares/request-handler": "^1.4",
     "middlewares/payload": "^2.1",
+    "php-di/php-di": "6.0.10",
     "vlucas/phpdotenv": "^3.6"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",
-    "orbiter/satellite-whoops": "dev-master"
+    "orbiter/satellite-whoops": "0.0.1"
   },
   "autoload": {
     "psr-4": {
