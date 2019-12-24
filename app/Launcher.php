@@ -36,30 +36,26 @@ class Launcher {
      */
     protected DI\Container $container;
 
-    protected $discovering = [
-        KernelRoute\Annotations\Route::class,
-        KernelRoute\Annotations\Post::class,
-        KernelConsole\Annotations\Command::class,
-    ];
-
     public function setup(SystemLaunchEvent $exec) {
         if(getenv('env') === 'prod' && $this->cache->contains(static::CACHE_ANNOTATIONS_DISCOVERY)) {
             $this->discovery->setDiscovered($this->cache->fetch(static::CACHE_ANNOTATIONS_DISCOVERY));
             return $exec;
         }
 
-        foreach($this->discovering as $disco) {
-            $this->discovery->addDiscover($disco);
-        }
-
         // Discovering Annotations on classes found for CodeInfo group `annotations`
         $this->discovery->discoverByAnnotation('annotations');
+
+        if(getenv('env') === 'prod') {
+            $this->cache->save(static::CACHE_ANNOTATIONS_DISCOVERY, $this->discovery->getAll());
+
+            return $exec;
+        }
 
         return $exec;
     }
 
     public function setupConsole(SystemLaunchEvent $exec) {
-        $this->container->set('commands', $this->discovery->getDiscovered()[KernelConsole\Annotations\Command::class]);
+        $this->container->set('commands', $this->discovery->getDiscovered(KernelConsole\Annotations\Command::class));
 
         $exec = Event::execute([KernelConsole\CommandDiscovery::class, 'registerAnnotations',], $exec);
 
@@ -69,8 +65,11 @@ class Launcher {
     public function setupRoute(SystemLaunchEvent $exec) {
         // register the discovered
         $this->container->set('routes', [
-            ...$this->discovery->getDiscovered()[KernelRoute\Annotations\Route::class],
-            ...$this->discovery->getDiscovered()[KernelRoute\Annotations\Post::class],
+            ...($this->discovery->getDiscovered(KernelRoute\Annotations\Get::class)),
+            ...($this->discovery->getDiscovered(KernelRoute\Annotations\Route::class)),
+            ...($this->discovery->getDiscovered(KernelRoute\Annotations\Post::class)),
+            ...($this->discovery->getDiscovered(KernelRoute\Annotations\Put::class)),
+            ...($this->discovery->getDiscovered(KernelRoute\Annotations\Delete::class)),
         ]);
 
         $exec = Event::execute([KernelRoute\RouteDiscovery::class, 'registerAnnotations',], $exec);

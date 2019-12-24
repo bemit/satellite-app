@@ -5,18 +5,8 @@ namespace App\Commands;
 use Satellite\KernelConsole\Annotations\Command;
 use Satellite\KernelConsole\Annotations\CommandOption;
 use Satellite\KernelConsole\Annotations\CommandOperand;
-use DI\Annotation\Inject;
 
 class DemoMultiple {
-    /**
-     * this property uses the `Inject` annotation from `php-di` and get's the ConsoleApp injected
-     *
-     * @Inject
-     * @var \Satellite\KernelConsole\ConsoleEvent $console
-     */
-    protected $console;
-
-
     /**
      * @Command(
      *     name="demo:welcome",
@@ -28,14 +18,19 @@ class DemoMultiple {
      *     }
      * )
      */
-    public function handleWelcome() {
-        error_log(($this->console->getOptions()['formal'] ? 'Hello ' : 'Hi ') . (isset($this->console->getOperands()[0]) ? $this->console->getOperands()[0] : 'there') . '!');
+    public function handleWelcome(\Satellite\KernelConsole\ConsoleEvent $console) {
+        error_log(($console->getOptions()['formal'] ? 'Hello ' : 'Hi ') . (isset($console->getOperands()[0]) ? $console->getOperands()[0] : 'there') . '!');
     }
 
     /**
-     * @Command(name="demo:bye")
+     * @Command(
+     *     name="demo:bye",
+     *     operands={
+     *          @CommandOperand(name="name", description="the name to welcome")
+     *     }
+     * )
      */
-    public function handleBye() {
-        error_log('Bye ' . (isset($this->console->getOperands()[0]) ? $this->console->getOperands()[0] : 'there') . '!');
+    public function handleBye(\Satellite\KernelConsole\ConsoleEvent $console) {
+        error_log('Bye ' . (isset($console->getOperands()[0]) ? $console->getOperands()[0] : 'there') . '!');
     }
 }

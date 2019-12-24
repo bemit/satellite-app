@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a1da70afa9f54038144544739e70190a",
+    "content-hash": "642b4e016cceda197e47f9f2f8718d98",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -799,16 +799,16 @@
         },
         {
             "name": "orbiter/annotations-util",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bemit/orbiter-annotations-util.git",
-                "reference": "c00e60490dab3a5cb843926f261b4c876ed4965b"
+                "reference": "79b1c1ea95bab973d3bf25e2da7ed6417c3482df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bemit/orbiter-annotations-util/zipball/c00e60490dab3a5cb843926f261b4c876ed4965b",
-                "reference": "c00e60490dab3a5cb843926f261b4c876ed4965b",
+                "url": "https://api.github.com/repos/bemit/orbiter-annotations-util/zipball/79b1c1ea95bab973d3bf25e2da7ed6417c3482df",
+                "reference": "79b1c1ea95bab973d3bf25e2da7ed6417c3482df",
                 "shasum": ""
             },
             "require": {
@@ -837,7 +837,7 @@
                 }
             ],
             "description": "Helper for Doctrine\\Annotations, with cached Reflections ⚡",
-            "time": "2019-12-01T19:03:42+00:00"
+            "time": "2019-12-04T23:40:57+00:00"
         },
         {
             "name": "orbiter/middleware-twig",
@@ -871,16 +871,16 @@
         },
         {
             "name": "orbiter/satellite",
-            "version": "0.0.1",
+            "version": "0.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bemit/satellite.git",
-                "reference": "ce78c11a81fc923626d806e7bc71b4d01ac11880"
+                "reference": "bf6b2a933e8aa4460cf510d5d643cbabd5ccbd09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bemit/satellite/zipball/ce78c11a81fc923626d806e7bc71b4d01ac11880",
-                "reference": "ce78c11a81fc923626d806e7bc71b4d01ac11880",
+                "url": "https://api.github.com/repos/bemit/satellite/zipball/bf6b2a933e8aa4460cf510d5d643cbabd5ccbd09",
+                "reference": "bf6b2a933e8aa4460cf510d5d643cbabd5ccbd09",
                 "shasum": ""
             },
             "require": {
@@ -908,7 +908,7 @@
                 "MIT"
             ],
             "description": "Easy to use Event & Middleware Mini-Framework, powered by popular projects and PSR's",
-            "time": "2019-11-21T22:51:45+00:00"
+            "time": "2019-12-02T23:14:44+00:00"
         },
         {
             "name": "orbiter/satellite-console",
