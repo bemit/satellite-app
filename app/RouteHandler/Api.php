@@ -2,29 +2,26 @@
 
 namespace App\RouteHandler;
 
-use DI\Annotation\Inject;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Satellite\KernelRoute\Annotations\Post;
-use Satellite\Response\Respond;
+use Satellite\KernelRoute\Annotations\Get;
+use Satellite\Response\Response;
 
-class Api {
+/**
+ * @Get("/api", name="api")
+ */
+class Api implements RequestHandlerInterface {
     /**
-     * @Inject
-     * @var \Satellite\KernelRoute\RouteEvent
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     * @throws \JsonException
      */
-    protected $event;
-
-    /**
-     * @Post("/api/auth", name="api")
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Server\RequestHandlerInterface $handler
-     *
-     * @throws \Exception
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function handleApiAuth(ServerRequestInterface $request, RequestHandlerInterface $handler) {
-        return Respond::json(['success' => true], $request, $handler);
+    public function handle(ServerRequestInterface $request): ResponseInterface {
+        return (new Response([
+            'success' => true,
+            'path' => $request->getUri()->getPath(),
+            'get_params' => $request->getQueryParams(),
+        ]))->json();
     }
 }

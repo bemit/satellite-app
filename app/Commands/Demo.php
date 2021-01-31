@@ -17,7 +17,7 @@ use Satellite\KernelConsole\Annotations\CommandOperand;
  * )
  */
 class Demo {
-    public function handle(\Satellite\KernelConsole\ConsoleEvent $console) {
-        error_log('Hi ' . (isset($console->getOperands()[0]) ? $console->getOperands()[0] : 'there') . '!');
+    public function handle(\GetOpt\Command $command) {
+        error_log('Hi ' . (isset($command->getOperands()[0]) ? $command->getOperands()[0] : 'there') . '!');
     }
 }

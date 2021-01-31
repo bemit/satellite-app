@@ -18,8 +18,8 @@ class DemoMultiple {
      *     }
      * )
      */
-    public function handleWelcome(\Satellite\KernelConsole\ConsoleEvent $console) {
-        error_log(($console->getOptions()['formal'] ? 'Hello ' : 'Hi ') . (isset($console->getOperands()[0]) ? $console->getOperands()[0] : 'there') . '!');
+    public function handleWelcome(\GetOpt\Command $command) {
+        error_log(($command->getOptions()['formal'] ? 'Hello ' : 'Hi ') . (isset($command->getOperands()[0]) ? $command->getOperands()[0] : 'there') . '!');
     }
 
     /**
@@ -30,7 +30,7 @@ class DemoMultiple {
      *     }
      * )
      */
-    public function handleBye(\Satellite\KernelConsole\ConsoleEvent $console) {
-        error_log('Bye ' . (isset($console->getOperands()[0]) ? $console->getOperands()[0] : 'there') . '!');
+    public function handleBye(\GetOpt\Command $command) {
+        error_log('Bye ' . (isset($command->getOperands()[0]) ? $command->getOperands()[0] : 'there') . '!');
     }
 }

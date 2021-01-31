@@ -2,23 +2,18 @@
 
 namespace App\RouteHandler;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Satellite\KernelRoute\Annotations\Route;
+use Satellite\Response\Response;
 
-class Home {
-
-    /**
-     * @Route(name="home", path="/", method="GET")
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Server\RequestHandlerInterface $handler
-     *
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function handle(ServerRequestInterface $request, RequestHandlerInterface $handler) {
-
-        echo <<<HTML
+/**
+ * @Route(name="home", path="/", method="GET")
+ */
+class Home implements RequestHandlerInterface {
+    public function handle(ServerRequestInterface $request): ResponseInterface {
+        $html = <<<HTML
 <!doctype HTML>
 <html style="background: #0e1a27; color:#d5d5d5;font-family: sans-serif; text-align: center;">
     <h2 style="font-size: 2rem;">
@@ -32,7 +27,6 @@ class Home {
     </p>
 </html>
 HTML;
-
-        return $handler->handle($request);
+        return (new Response($html))->html();
     }
 }

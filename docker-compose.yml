@@ -15,9 +15,7 @@ services:
       - /tmp/php-opcache
 
   mailhog:
-    container_name: mailhog_satellite
     image: mailhog/mailhog
-    restart: always
     logging:
       driver: 'none'  # disable saving logs
     ports:

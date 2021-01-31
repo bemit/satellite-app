@@ -16,6 +16,10 @@
 
 Easy to use Event & Middleware Framework, powered by popular micro-libraries and based on [PSRs](https://www.php-fig.org/psr/).
 
+>
+> todo: current `/docs/` are outdated
+>
+
 - [Setup](#setup)
     - [Config](#config)
 - [Implemented PSRs](#psrs)
@@ -44,7 +48,12 @@ composer create-project orbiter/satellite-app ./satellite
 
 cd ./satellite
 
-php -S localhost:3333 ./server.php display_errors=0 # start PHP Dev Server
+# create `.env` file, should add for dev: `env=dev`
+touch .env 
+
+# start PHP Dev Server
+cd web && php -S localhost:3333 ./server.php display_errors=0
+
 # or point the Apache Root to `/web/`
 # or point the NGINX entry to `/web/index.php`
 # or use Docker: `docker-compose up`
@@ -54,11 +63,11 @@ Open your browser on: http://localhost:3333
 
 Look into files:
 
-
-- `events.php` - define app components flow and middleware
-- `launch.php` - add config launch setup, DI, Annotations, first call
-
-Everything else is up to you!
+- `launch.php` - setup, DI, Annotations, dispatch `SatelliteApp` event
+- `/config/config.php` - meta config
+- `/config/dependencies.php` - definitions for PHP-DI
+- `/config/events.php` - define app components flow
+- `/config/pipeline.php` - setup PSR middlewares and pipeline
 
 ## Setup
 
@@ -107,7 +116,7 @@ Start containers specified in `docker-compose.yml`, then open: http://localhost:
 docker-compose up
 
 # open shell in app container
-docker-compose exec app sh
+docker-compose exec app bash
 # use composer integrated in image
 composer require monolog/monolog
 ```
@@ -128,8 +137,6 @@ location / {
 }
 ```
 
-> The CLI could be used in e.g. crons on the production server, in CI during build - but **don't use** `server.php` as production entry point.
-
 ### Config
 
 Use `.env` to add configuration, see [Features](docs) for how to configure/setup different logic parts.
@@ -138,7 +145,7 @@ Default's config includes:
 
 - `env` if in production or not in production
     - with value `prod` it is assumed in the App (not the framework) that it is in production
-    - use `getenv('env') === 'prod'` to check for production
+    - use `$_ENV['env'] === 'prod'` to check for production
 
 ## PSRs
 
@@ -146,12 +153,13 @@ This app serves as mini-framework, with PSR powered libraries, ready-to-use Anno
 
 It is build upon [PSRs](https://www.php-fig.org/psr/) and popular, specialized packages implementing them or other great stuff.
 
-- **PSR-3** - Logger *(todo)*
+- **PSR-3** - Logger, use: [monolog](https://github.com/Seldaek/monolog)
 - **PSR-4** - autoloading classes and forget require
     - handled by composer, more in [composer docs.](https://getcomposer.org/doc/01-basic-usage.md#autoloading)
 - **PSR-1,12** - Code Style Guides
     - but we break the brackets location rule, same-line instead of next-list for opening `{`
-- **PSR-6** - Cache *(todo)*
+- **PSR-6** - Cache, use a [PHP-Cache Bridge](http://www.php-cache.com/en/latest/)
+    - *currently* integrates Doctrine cache for some features
 - **PSR-7** - HTTP Message
     - request and response data definitions
 - **PSR-11** - Container for InterOp
@@ -163,6 +171,7 @@ It is build upon [PSRs](https://www.php-fig.org/psr/) and popular, specialized p
     - as the core of how things are put together
 - **PSR-15** - HTTP Handlers
     - handling requests with executing the middleware pipe
+- **PSR-16** - Simple Cache, use e.g. [Doctrine SimpleCache adapter](https://github.com/Roave/DoctrineSimpleCache)
 - **PSR-17** - HTTP Factories are used but not all features are wired (partly)
     - create context about request
     - useful for uploads and streams
@@ -178,38 +187,35 @@ Most packages can be replaced with any PSR implementation or another framework o
     - the core + event handler
     - implements **PSR-14** Event Dispatcher and Listener
     - with invoker to execute anything, **PSR-11** compatible
-    - with singleton `Satellite\Event` to register and dispatch events
-    - origin of [SystemLaunchEvent](docs/satellite-events.md#systemlaunchevent)
     - see [Events](docs/feature-events.md)
 - `orbiter/satellite-console`
     - console execution
     - console command annotations
-    - origin of [ConsoleEvent](docs/satellite-events.md#consoleevent)
     - uses [getopt-php](https://github.com/getopt-php/getopt-php)
     - see [Console](docs/feature-console.md)
 - `orbiter/satellite-response`
     - middleware pipe execution
     - implements **PSR-15** through `equip/dispatch`, **PSR-11** compliant
+    - implements **PSR-7,17** through `nyholm/psr7` and `nyholm/psr7-server` 
     - with simple emitter by `narrowspark/http-emitter`
     - see [Middleware](docs/feature-middleware.md) 
 - `orbiter/satellite-route`
-    - routing execution
-    - origin of [RouteEvent](docs/satellite-events.md#routeevent)
+    - routes by annotations
     - uses [nikic/fast-route](https://github.com/nikic/FastRoute) as router
-    - special generation syntax for routes
-    - implements **PSR-7,17** through `nyholm/psr7` and `nyholm/psr7-server` 
+    - made for PSR middleware usage, but not limited
     - see [Routing](docs/feature-routing.md)
 - `orbiter/annotations-util`
     - annotations by `doctrine/annotations` with cached reflections
+    - get classes, methods and properties which are annotated
     - see [AnnotationsUtil](https://github.com/bemit/orbiter-annotations-util)
 - `orbiter/satellite-whoops`
     - Whoops error display for CLI and Routes
-    - only when `getenv('env')` not `prod` (configurable in `launch.php`)
+    - only when `$_ENV['env']` not `prod` (configurable in `launch.php`)
 - Dependency Injection
     - implements **PSR-11** through [php-di](http://php-di.org)
     - see [DI](docs/feature-di.md)
     
-A lot of work is done by Utils provided by [GitHub Middlewares](https://github.com/middlewares), find more [awesome middlewares](https://github.com/middlewares/awesome-psr15-middlewares).
+A lot of work is done by PSR-15 HTTP Middlewares provided by [github.com/middlewares](https://github.com/middlewares), find more [awesome middlewares](https://github.com/middlewares/awesome-psr15-middlewares).
 
 ## Features
 

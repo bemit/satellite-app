@@ -1,102 +1,85 @@
 <?php
 
-use Satellite\Event;
-
-use Satellite\System;
 use Orbiter\AnnotationsUtil\AnnotationsUtil;
 use Orbiter\AnnotationsUtil\CodeInfo;
-use Doctrine\Common\Cache;
 use DI\ContainerBuilder;
-use function DI\autowire;
 
-/*
- * General Path Configurations, DI and Annotations
- */
-$tmp_root = __DIR__ . '/tmp';
+date_default_timezone_set('UTC');
 
-$config_annotation = [
-    // Folders containing annotations
-    'psr4' => [
-        // PSR4\Namespace => abs/Path
-        'Satellite\KernelConsole\Annotations' => __DIR__ . '/vendor/orbiter/satellite-console/src/Annotations',
-        'Satellite\KernelRoute\Annotations' => __DIR__ . '/vendor/orbiter/satellite-route/src/Annotations',
-        'Lib' => __DIR__ . '/lib',
-    ],
-    // annotations to ignore, Doctrine\Annotations applies a default filter
-    'ignore' => [
-        'dummy',
-    ],
-];
+require_once __DIR__ . '/vendor/autoload.php';
 
-$config_di = [
-    // Folders compiled into DI-Container
-    'services' => [
-        __DIR__ . '/app',
-        __DIR__ . '/lib',
-        //__DIR__ . '/vendor/orbiter/annotations-util/src',
-    ],
-    // Folders searched for infos to be used in annotation discovery
-    'annotation' => [
-        __DIR__ . '/app',
-        __DIR__ . '/lib',
-    ],
-];
+(static function() {
+    $cli = PHP_SAPI === 'cli';
+    $config = (require __DIR__ . '/config/config.php')();
 
-// Setup Annotations
-foreach($config_annotation['psr4'] as $annotation_ns => $annotation_ns_dir) {
-    AnnotationsUtil::registerPsr4Namespace($annotation_ns, $annotation_ns_dir);
-}
-foreach($config_annotation['ignore'] as $annotation_ig) {
-    Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName($annotation_ig);
-}
+    if($_ENV['env'] !== 'prod') {
+        Satellite\Whoops\NiceDebug::enable($cli);
+    }
 
-AnnotationsUtil::useReader(
-    AnnotationsUtil::createReader(getenv('env') === 'prod' ? $tmp_root . '/annotations' : null)
-);
+    // Setup Annotations
+    foreach($config['annotation']['psr4'] as $annotation_ns => $annotation_ns_dir) {
+        AnnotationsUtil::registerPsr4Namespace($annotation_ns, $annotation_ns_dir);
+    }
+    foreach($config['annotation']['ignore'] as $annotation_ig) {
+        Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName($annotation_ig);
+    }
 
-// Setup DI
-$container_builder = new ContainerBuilder();
-$container_builder->useAutowiring(true);
-$container_builder->useAnnotations(true);
+    AnnotationsUtil::useReader(
+        AnnotationsUtil::createReader($_ENV['env'] === 'prod' ? $config['dir_tmp'] . '/annotations' : null)
+    );
 
-if(getenv('env') === 'prod') {
-    $container_builder->enableCompilation($tmp_root . '/di');
-}
+    // Setup DI
+    $container_builder = new ContainerBuilder();
+    $container_builder->useAutowiring(true);
+    $container_builder->useAnnotations(true);
 
-// Setup Annotation Helper
-$code_info = new CodeInfo();
-if(getenv('env') === 'prod') {
-    $code_info->enableFileCache($tmp_root . '/codeinfo.cache');
-}
-$code_info->defineDirs('services', $config_di['services']);
-$code_info->defineDirs('annotations', $config_di['annotation']);
-$code_info->process();
+    if($_ENV['env'] === 'prod') {
+        $container_builder->enableCompilation($config['dir_tmp'] . '/di');
+    }
 
-// Defining DI Services
-$definitions = [
-    System::class => DI\autowire(System::class),
-    CodeInfo::class => $code_info,
-    Cache\PhpFileCache::class => DI\autowire()
-        ->constructorParameter('directory', $tmp_root . '/php_cache'),
-];
+    // Setup Caching Helper for Annotation Discovery / Reflection
+    $code_info = new CodeInfo();
+    if($_ENV['env'] === 'prod') {
+        $code_info->enableFileCache($config['dir_tmp'] . '/codeinfo.cache');
+    }
+    if(isset($config['code_info'])) {
+        foreach($config['code_info'] as $name => $paths) {
+            $code_info->defineDirs($name, $paths);
+        }
+    }
+    $code_info->process();
 
-$services = $code_info->getClassNames('services');
+    // Defining DI Services
+    $dependencies = (require __DIR__ . '/config/dependencies.php')($config);
+    $dependencies[CodeInfo::class] = $code_info;
+    $dependencies['config'] = $config;
 
-foreach($services as $service) {
-    $definitions[$service] = autowire($service);
-}
+    $container_builder->addDefinitions($dependencies);
 
-$container_builder->addDefinitions($definitions);
+    // Building Container
+    try {
+        $container = $container_builder->build();
+    } catch(\Exception $e) {
+        error_log('launch: Event build Container failed: ' . $e->getMessage());
+        exit(2);
+    }
 
-// Building Container
-try {
-    $container = $container_builder->build();
-} catch(\Exception $e) {
-    error_log('launch: Event build Container failed');
-    exit(2);
-}
+    /**
+     * @var $invoker \Invoker\Invoker
+     */
+    $invoker = $container->get(\Invoker\Invoker::class);
+    $invoker->getParameterResolver()->prependResolver(
+        new \Satellite\InvokerTypeHintContainerResolver($container)
+    );
 
-Event::useContainer($container);
+    // Attach events
+    $events = require __DIR__ . '/config/events.php';
+    $invoker->call($events);
 
-// Dispatching the Launch
-$container->call([System::class, 'launch']);
+    /**
+     * @var \Satellite\SatelliteAppInterface $app
+     */
+    $app = $container->get(\Satellite\SatelliteAppInterface::class);
+    $app->launch($cli);
+})();
+
