@@ -52,7 +52,7 @@ cd ./satellite
 touch .env 
 
 # start PHP Dev Server
-cd web && php -S localhost:3333 ./server.php display_errors=0
+cd web && php -S localhost:3333 ./index.php display_errors=0
 
 # or point the Apache Root to `/web/`
 # or point the NGINX entry to `/web/index.php`

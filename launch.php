@@ -1,6 +1,6 @@
 <?php
 
-use Orbiter\AnnotationsUtil\AnnotationsUtil;
+use Orbiter\AnnotationsUtil\AnnotationUtil;
 use Orbiter\AnnotationsUtil\CodeInfo;
 use DI\ContainerBuilder;
 
@@ -16,18 +16,6 @@ require_once __DIR__ . '/vendor/autoload.php';
         Satellite\Whoops\NiceDebug::enable($cli);
     }
 
-    // Setup Annotations
-    foreach($config['annotation']['psr4'] as $annotation_ns => $annotation_ns_dir) {
-        AnnotationsUtil::registerPsr4Namespace($annotation_ns, $annotation_ns_dir);
-    }
-    foreach($config['annotation']['ignore'] as $annotation_ig) {
-        Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName($annotation_ig);
-    }
-
-    AnnotationsUtil::useReader(
-        AnnotationsUtil::createReader($_ENV['env'] === 'prod' ? $config['dir_tmp'] . '/annotations' : null)
-    );
-
     // Setup DI
     $container_builder = new ContainerBuilder();
     $container_builder->useAutowiring(true);
@@ -37,21 +25,8 @@ require_once __DIR__ . '/vendor/autoload.php';
         $container_builder->enableCompilation($config['dir_tmp'] . '/di');
     }
 
-    // Setup Caching Helper for Annotation Discovery / Reflection
-    $code_info = new CodeInfo();
-    if($_ENV['env'] === 'prod') {
-        $code_info->enableFileCache($config['dir_tmp'] . '/codeinfo.cache');
-    }
-    if(isset($config['code_info'])) {
-        foreach($config['code_info'] as $name => $paths) {
-            $code_info->defineDirs($name, $paths);
-        }
-    }
-    $code_info->process();
-
     // Defining DI Services
     $dependencies = (require __DIR__ . '/config/dependencies.php')($config);
-    $dependencies[CodeInfo::class] = $code_info;
     $dependencies['config'] = $config;
 
     $container_builder->addDefinitions($dependencies);
@@ -60,7 +35,7 @@ require_once __DIR__ . '/vendor/autoload.php';
     try {
         $container = $container_builder->build();
     } catch(\Exception $e) {
-        error_log('launch: Event build Container failed: ' . $e->getMessage());
+        error_log('Satellite launch: container building failed: ' . $e->getMessage());
         exit(2);
     }
 
@@ -69,8 +44,16 @@ require_once __DIR__ . '/vendor/autoload.php';
      */
     $invoker = $container->get(\Invoker\Invoker::class);
     $invoker->getParameterResolver()->prependResolver(
-        new \Satellite\InvokerTypeHintContainerResolver($container)
+        new Satellite\InvokerTypeHintContainerResolver($container)
     );
+
+    // Setup Annotations
+    foreach($config['annotation']['psr4'] as $annotation_ns => $annotation_ns_dir) {
+        AnnotationUtil::registerPsr4Namespace($annotation_ns, $annotation_ns_dir);
+    }
+    foreach($config['annotation']['ignore'] as $annotation_ig) {
+        Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName($annotation_ig);
+    }
 
     // Attach events
     $events = require __DIR__ . '/config/events.php';
@@ -79,7 +62,7 @@ require_once __DIR__ . '/vendor/autoload.php';
     /**
      * @var \Satellite\SatelliteAppInterface $app
      */
-    $app = $container->get(\Satellite\SatelliteAppInterface::class);
+    $app = $container->get(Satellite\SatelliteAppInterface::class);
     $app->launch($cli);
 })();
 

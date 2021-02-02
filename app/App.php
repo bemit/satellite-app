@@ -2,7 +2,6 @@
 
 namespace App;
 
-use GetOpt\GetOpt;
 use Invoker\InvokerInterface;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -50,7 +49,7 @@ class App {
         $console = $this->container->get(KernelConsole\Console::class);
         $console = $this->dispatcher->dispatch($console);
 
-        $command = $console->process($this->container->get(GetOpt::class));
+        $command = $console->process();
         $handler = $command->getHandler();
         $this->invoker->call($handler, [$command]);
     }

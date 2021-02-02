@@ -6,6 +6,7 @@ use Doctrine\Common\Cache;
 use DI\Annotation\Inject;
 use Invoker\InvokerInterface;
 use Orbiter\AnnotationsUtil\AnnotationDiscovery;
+use Orbiter\AnnotationsUtil\CodeInfo;
 use Psr\Container\ContainerInterface;
 use Satellite\KernelConsole;
 use Satellite\KernelRoute;
@@ -26,7 +27,6 @@ class AnnotationsDiscovery {
      */
     protected Cache\PhpFileCache $cache;
     /**
-     * @Inject
      * @var ContainerInterface
      */
     protected ContainerInterface $container;
@@ -36,7 +36,18 @@ class AnnotationsDiscovery {
      */
     protected InvokerInterface $invoker;
 
-    public function setup(SatelliteAppInterface $app) {
+    public function __construct(CodeInfo $code_info, ContainerInterface $container) {
+        $this->container = $container;
+        $config = $container->get('config');
+        if(isset($config['code_info'])) {
+            foreach($config['code_info'] as $name => $paths) {
+                $code_info->defineDirs($name, $paths);
+            }
+        }
+        $code_info->process();
+    }
+
+    public function discover(SatelliteAppInterface $app) {
         if($_ENV['env'] === 'prod' && $this->cache->contains(static::CACHE_ANNOTATIONS_DISCOVERY)) {
             $this->discovery->setDiscovered($this->cache->fetch(static::CACHE_ANNOTATIONS_DISCOVERY));
             return $app;

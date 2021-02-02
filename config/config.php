@@ -17,7 +17,6 @@ return static function() {
                 // PSR4\Namespace => abs/Path
                 'Satellite\KernelConsole\Annotations' => __DIR__ . '/../vendor/orbiter/satellite-console/src/Annotations',
                 'Satellite\KernelRoute\Annotations' => __DIR__ . '/../vendor/orbiter/satellite-route/src/Annotations',
-                //'Lib' => __DIR__ . '/lib',
             ],
             // annotations to ignore, Doctrine\Annotations applies a default filter
             'ignore' => [
@@ -26,7 +25,7 @@ return static function() {
         ],
         'code_info' => [
             // Folders searched for infos to be used in annotation discovery
-            \App\AnnotationsDiscovery::ANNOTATIONS_DISCOVERY => [
+            App\AnnotationsDiscovery::ANNOTATIONS_DISCOVERY => [
                 __DIR__ . '/../app/Commands',
                 __DIR__ . '/../app/RouteHandler',
             ],
