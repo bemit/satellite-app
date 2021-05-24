@@ -1,9 +1,9 @@
 # Orbiter\Satellite Features 🛰️
 
-- [Setup](../README.md#setup)
-    - [Config](../README.md#config)
-- [Implemented PSRs](../README.md#psrs)
-- [Used Packages](../README.md#used-packages)
+- [Setup](../../README.md#setup)
+    - [Config](../../README.md#config)
+- [Implemented PSRs](../../README.md#psrs)
+- [Used Packages](../../README.md#used-packages)
 
 Satellite integrates into a micro framework to rapidly build PHP server apps, mostly - but not limited - for non-human clients.
 

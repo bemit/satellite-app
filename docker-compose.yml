@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: ./
-      dockerfile: ./Dockerfile
+      dockerfile: ./DockerfilePhp8
     environment:
       - DB_HOST=host.docker.internal
     ports:

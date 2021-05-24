@@ -5,7 +5,9 @@ if(PHP_SAPI === 'cli-server' && $_SERVER['SCRIPT_FILENAME'] !== __FILE__) {
     return false;
 }
 
-if(PHP_SAPI === 'cli-server' || $_ENV['env'] !== 'prod') {
+require_once __DIR__ . '/../launch.php';
+
+if(PHP_SAPI === 'cli-server' || (isset($_ENV['env']) && $_ENV['env'] !== 'prod')) {
     $ssl = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
     $port = $_SERVER['SERVER_PORT'];
     $port = ((!$ssl && $port === '80') || ($ssl && $port === '443')) ? '' : ':' . $port;
@@ -17,8 +19,7 @@ if(PHP_SAPI === 'cli-server' || $_ENV['env'] !== 'prod') {
     );
 }
 
-require_once __DIR__ . '/../launch.php';
 
-if(PHP_SAPI === 'cli-server' || $_ENV['env'] !== 'prod') {
+if(PHP_SAPI === 'cli-server' || (isset($_ENV['env']) && $_ENV['env'] !== 'prod')) {
     error_log('... ' . number_format((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']), 6) . 's' . PHP_EOL);
 }

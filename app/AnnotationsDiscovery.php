@@ -2,12 +2,12 @@
 
 namespace App;
 
+use DI\Container;
 use Doctrine\Common\Cache;
 use DI\Annotation\Inject;
 use Invoker\InvokerInterface;
 use Orbiter\AnnotationsUtil\AnnotationDiscovery;
 use Orbiter\AnnotationsUtil\CodeInfo;
-use Psr\Container\ContainerInterface;
 use Satellite\KernelConsole;
 use Satellite\KernelRoute;
 use Satellite\Response\ResponsePipe;
@@ -18,25 +18,28 @@ class AnnotationsDiscovery {
     public const ANNOTATIONS_DISCOVERY = 'annotations';
     /**
      * @Inject
-     * @var \Orbiter\AnnotationsUtil\AnnotationDiscovery
      */
     protected AnnotationDiscovery $discovery;
     /**
      * @Inject
-     * @var \Doctrine\Common\Cache\PhpFileCache
      */
     protected Cache\PhpFileCache $cache;
     /**
-     * @var ContainerInterface
+     * @var Container
      */
-    protected ContainerInterface $container;
+    protected Container $container;
     /**
      * @Inject
-     * @var InvokerInterface
      */
     protected InvokerInterface $invoker;
 
-    public function __construct(CodeInfo $code_info, ContainerInterface $container) {
+    /**
+     * AnnotationsDiscovery constructor.
+     * @param CodeInfo $code_info
+     * @param Container $container
+     * @throws \Orbiter\AnnotationsUtil\CodeInfoCacheFileException
+     */
+    public function __construct(CodeInfo $code_info, Container $container) {
         $this->container = $container;
         $config = $container->get('config');
         if(isset($config['code_info'])) {

@@ -1,9 +1,9 @@
 # Events dispatched by Orbiter\Satellite 🛰️
 
-- [Setup](../README.md#setup)
-    - [Config](../README.md#config)
-- [Implemented PSRs](../README.md#psrs)
-- [Used Packages](../README.md#used-packages)
+- [Setup](../../README.md#setup)
+    - [Config](../../README.md#config)
+- [Implemented PSRs](../../README.md#psrs)
+- [Used Packages](../../README.md#used-packages)
 - [Features](README.md)
     - [Events](feature-events.md)
     - [Routing](feature-routing.md)

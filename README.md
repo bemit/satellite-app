@@ -37,7 +37,7 @@ Easy to use Event & Middleware Framework, powered by popular micro-libraries and
 - [Download Build](#download-build)
 - [License](#license)
 
-Requires PHP 7.4+ and [composer](https://getcomposer.org/)
+Supports PHP 7.4.1+ and 8+ and [composer](https://getcomposer.org/)
 
 ## TL;DR
 
