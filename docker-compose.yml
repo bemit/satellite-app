@@ -6,7 +6,8 @@ services:
       context: ./
       dockerfile: ./DockerfilePhp8
     environment:
-      - DB_HOST=host.docker.internal
+      env: dev
+      DB_HOST: host.docker.internal
     ports:
       - "3333:80"
     volumes:

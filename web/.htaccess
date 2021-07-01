@@ -1,25 +1,71 @@
-<IfModule mod_headers.c>
-	FileETag MTime Size
-	<FilesMatch "\.(js|css|svg|svgz)$">
-		# remove for compressed files
-		Header unset ETag
-	</FilesMatch>
+<IfModule mod_expires.c>
+    ExpiresActive On
+
+    AddType application/font-sfnt            otf ttf
+    AddType application/font-woff            woff
+    AddType application/font-woff2           woff2
+    AddType application/vnd.ms-fontobject    eot
+
+    ExpiresByType application/font-woff "access 1 year"
+    ExpiresByType application/font-woff2 "access 1 year"
+    ExpiresByType application/font-sfnt "access 1 year"
+    ExpiresByType application/vnd.ms-fontobject "access 1 year"
+
+    # Images
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+
+    # Video
+    ExpiresByType video/mp4 "access plus 1 year"
+    ExpiresByType video/mpeg "access plus 1 year"
+
+    # CSS, JavaScript
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    #ExpiresByType application/json "access plus 0"
+
+    # Others
+    #ExpiresByType application/pdf "access plus 1 month"
+    #ExpiresByType application/x-shockwave-flash "access plus 1 month"
 </IfModule>
 
-<IfModule mod_expires.c>
-	ExpiresActive On
-	# don't expire images until you are using a cache buster or long mobile caches are no problem
-	#ExpiresByType image/jpg "access 2 week"
-	#ExpiresByType image/jpeg "access 2 week"
-	#ExpiresByType image/gif "access 2 week"
-	#ExpiresByType image/png "access 2 week"
-	ExpiresByType image/svg+xml "access 1 week"
-	ExpiresByType text/css "access 1 week"
-	ExpiresByType text/html "access 1 week"
-	ExpiresByType application/pdf "access 1 day"
-	ExpiresByType text/x-javascript "access 1 day"
-	ExpiresByType image/x-icon "access 1 month"
-	ExpiresDefault "access 1 day"
+# BROWSER CACHING USING CACHE-CONTROL HEADERS
+<IfModule mod_headers.c>
+    # Do not cache any API calls by default
+    Header set Cache-Control "no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Access-Control-Max-Age 0
+    Header set Expires 0
+    Header set Server "bserve"
+
+    # One year for image and video files
+    <FilesMatch ".(flv|gif|ico|jpg|jpeg|mp4|mpeg|png|svg|swf|webp)$">
+        Header unset ETag
+        FileETag None
+        Header set Cache-Control "max-age=31536000, public"
+    </FilesMatch>
+    <FilesMatch "\.(svg)$">
+        Header unset ETag
+        FileETag None
+        Header set Cache-Control "max-age=604800, public"
+    </FilesMatch>
+
+    <FilesMatch "\.(js)">
+        Header unset ETag
+        FileETag None
+        Header set Cache-Control "max-age=604800, public"
+    </FilesMatch>
+
+    <FilesMatch "\.(woff|woff2|eot|ttf)$">
+        Header unset ETag
+        FileETag None
+        Header set Cache-Control "max-age=604800, public"
+    </FilesMatch>
 </IfModule>
 
 <IfModule mod_deflate.c>
@@ -34,21 +80,37 @@
 AddCharset utf-8 .html .php .css .js
 
 <IfModule mod_rewrite.c>
-
-    # only with this, GET parameters will be functional
+    # only with this, GET parameters are functional
     Options +FollowSymlinks
     Options -MultiViews
 
     RewriteEngine On
+    # The following rule allows authentication to work with fast-cgi
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    # The following rule allows authentication to work with fast-cgi
+    RewriteRule .* - [E=HTTP_AUDIENCE:%{HTTP:AUDIENCE}]
 
     # removes trailing slashes
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [R=301,L]
 
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
+    # The following rule tells Apache that if the requested filename
+    # exists, simply serve it.
     RewriteCond %{REQUEST_URI} !^/index.php
-    RewriteRule ^(.*)$ /index.php [QSA,L]
-</IfModule>
+    RewriteCond %{REQUEST_FILENAME} -s [OR]
+    RewriteCond %{REQUEST_FILENAME} -l [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^.*$ - [NC,L]
 
+    # The following rewrites all other queries to index.php. The
+    # condition ensures that if you are using Apache aliases to do
+    # mass virtual hosting, the base path will be prepended to
+    # allow proper resolution of the index.php file; it will work
+    # in non-aliased environments as well, providing a safe, one-size
+    # fits all solution.
+    RewriteCond %{REQUEST_URI}::$1 ^(/.+)(.+)::\2$
+    RewriteRule ^(.*) - [E=BASE:%1]
+    RewriteRule ^api$ %{ENV:BASE}api.html [NC,L]
+    RewriteRule ^(.*)$ %{ENV:BASE}index.php [NC,L]
+</IfModule>

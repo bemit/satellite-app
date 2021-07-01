@@ -46,6 +46,7 @@ return static function($config) {
         Orbiter\AnnotationsUtil\AnnotationReader::class => autowire(),
         //
         // routing
+        Satellite\Response\ResponsePipe::class => autowire(),
         Satellite\KernelRoute\Router::class => autowire(Satellite\KernelRoute\Router::class)
             ->constructorParameter('cache', $is_prod ? $config['dir_tmp'] . '/route.cache' : null),
         //

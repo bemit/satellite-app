@@ -1,7 +1,6 @@
 <?php
 
 use Orbiter\AnnotationsUtil\AnnotationUtil;
-use Orbiter\AnnotationsUtil\CodeInfo;
 use DI\ContainerBuilder;
 
 date_default_timezone_set('UTC');
