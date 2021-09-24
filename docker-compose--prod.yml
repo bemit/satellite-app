@@ -30,7 +30,10 @@ services:
       dockerfile: DockerfileProduction
       target: php_worker
       cache_from:
-        - bemiteu/satellite-app-worker
+        # using the latest `app` image also for caching worker base layers,
+        # thus only pulling one image and not two,
+        # the rebuild time for new layers isn't so important as the time to download images
+        - bemiteu/satellite-app
     environment:
       env: prod
     volumes:

@@ -31,14 +31,29 @@ jobs:
 
       - name: Docker Registry login
         run: docker login -u ${{ secrets.DOCKER_REG_USER }} -p ${{ secrets.DOCKER_REG_PASS }}
+
       - name: Docker pull
         run: docker-compose -f docker-compose--prod.yml pull
         env:
           APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
+
       - name: Docker build
         run: docker-compose -f docker-compose--prod.yml build --build-arg BUILDKIT_INLINE_CACHE=1
         env:
           APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
+
+      - name: Run tests in the just build app image
+        run: docker run -it --rm bemiteu/satellite-app:${APP_BUILD_VERSION} sh -c "cd /var/www && wget -O phpunit https://phar.phpunit.de/phpunit-9.phar && chmod +x phpunit && cd html && /var/www/phpunit --testdox tests"
+        env:
+          APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
+
+      - name: Publish App image `master` with tag `latest`
+        if: github.ref == 'refs/heads/master'
+        run: |
+          docker image rm bemiteu/satellite-app:latest
+          docker tag bemiteu/satellite-app:master bemiteu/satellite-app:latest
+          docker push bemiteu/satellite-app:latest
+
       - name: Docker Registry publish
         run: docker-compose -f docker-compose--prod.yml push
         env:

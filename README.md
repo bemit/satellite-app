@@ -129,6 +129,9 @@ docker run -it --rm -v `pwd`:/app composer dumpautoload
 
 # run tests with temporary `app` container:
 docker-compose run -T --rm app sh -c "cd /var/www/html && ./vendor/bin/phpunit --testdox tests"
+
+# running tests with a temporary `phpunit` in a prebuild container:
+docker run -it --rm bemiteu/satellite-app:master sh -c "cd /var/www && wget -O phpunit https://phar.phpunit.de/phpunit-9.phar && chmod +x phpunit && cd html && /var/www/phpunit --testdox tests"
 ```
 
 ### Web-Server
