@@ -43,7 +43,7 @@ jobs:
           APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
 
       - name: Run tests in the just build app image
-        run: docker run -it --rm bemiteu/satellite-app:${APP_BUILD_VERSION} sh -c "cd /var/www && wget -O phpunit https://phar.phpunit.de/phpunit-9.phar && chmod +x phpunit && cd html && /var/www/phpunit --testdox tests"
+        run: docker run -i --rm bemiteu/satellite-app:${APP_BUILD_VERSION} sh -c "cd /var/www && wget -O phpunit https://phar.phpunit.de/phpunit-9.phar && chmod +x phpunit && cd html && /var/www/phpunit --testdox tests"
         env:
           APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
 
