@@ -14,10 +14,8 @@ on:
 
 jobs:
   build_app:
+    name: Build and publish app docker images
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
     steps:
       - uses: actions/checkout@v2
       - name: Set Branch or Tag
