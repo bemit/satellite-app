@@ -1,0 +1,8 @@
+<testsuites>
+    <testsuite name="App Tests">
+        <directory>/tests</directory>
+    </testsuite>
+    <testsuite name="Orbiter Satellite Tests">
+        <directory>/vendor/orbiter/satellite/tests</directory>
+    </testsuite>
+</testsuites>

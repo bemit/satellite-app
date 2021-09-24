@@ -34,9 +34,11 @@ class AnnotationsDiscovery {
     protected InvokerInterface $invoker;
 
     /**
-     * AnnotationsDiscovery constructor.
      * @param CodeInfo $code_info
      * @param Container $container
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \JsonException
      * @throws \Orbiter\AnnotationsUtil\CodeInfoCacheFileException
      */
     public function __construct(CodeInfo $code_info, Container $container) {
@@ -50,7 +52,7 @@ class AnnotationsDiscovery {
         $code_info->process();
     }
 
-    public function discover(SatelliteAppInterface $app) {
+    public function discover(SatelliteAppInterface $app): SatelliteAppInterface {
         if($_ENV['env'] === 'prod' && $this->cache->contains(static::CACHE_ANNOTATIONS_DISCOVERY)) {
             $this->discovery->setDiscovered($this->cache->fetch(static::CACHE_ANNOTATIONS_DISCOVERY));
             return $app;
@@ -65,13 +67,13 @@ class AnnotationsDiscovery {
         return $app;
     }
 
-    public function bindCommands(KernelConsole\Console $console) {
+    public function bindCommands(KernelConsole\Console $console): KernelConsole\Console {
         $this->container->set(KernelConsole\CommandDiscovery::CONTAINER_ID, $this->discovery->getDiscovered(KernelConsole\Annotations\Command::class));
         $this->invoker->call([KernelConsole\CommandDiscovery::class, 'registerAnnotations']);
         return $console;
     }
 
-    public function bindRoutes(ResponsePipe $pipe) {
+    public function bindRoutes(ResponsePipe $pipe): ResponsePipe {
         $this->container->set(KernelRoute\RouteDiscovery::CONTAINER_ID, [
             ...($this->discovery->getDiscovered(KernelRoute\Annotations\Get::class)),
             ...($this->discovery->getDiscovered(KernelRoute\Annotations\Route::class)),

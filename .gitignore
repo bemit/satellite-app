@@ -1,5 +1,6 @@
 # env variables
-.env
+.env*
+!.env.example
 
 # default upload dir
 /upload
@@ -10,8 +11,13 @@
 # Composer
 /vendor
 
-# NodeJS
 /node_modules
+
+8
+supervisord.log
+supervisord.pid
+
+.phpunit.result.cache
 
 # Mac
 .DS_Store

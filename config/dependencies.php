@@ -10,10 +10,12 @@ return static function($config) {
         Satellite\SatelliteAppInterface::class => autowire(Satellite\SatelliteApp::class),
         //
         // event handler
-        Satellite\Event\EventListener::class => autowire(),
-        Satellite\Event\EventListenerInterface::class => get(Satellite\Event\EventListener::class),
-        Psr\EventDispatcher\ListenerProviderInterface::class => get(Satellite\Event\EventListener::class),
-        Psr\EventDispatcher\EventDispatcherInterface::class => autowire(Satellite\Event\EventDispatcher::class),
+        Satellite\Event\EventListenerInterface::class => autowire(Satellite\Event\EventListener::class),
+        Psr\EventDispatcher\ListenerProviderInterface::class => get(Satellite\Event\EventListenerInterface::class),
+        Satellite\Event\EventDispatcher::class => autowire()
+            ->constructorParameter('listener', get(Psr\EventDispatcher\ListenerProviderInterface::class))
+            ->constructorParameter('invoker', get(Invoker\InvokerInterface::class)),
+        Psr\EventDispatcher\EventDispatcherInterface::class => get(Satellite\Event\EventDispatcher::class),
         //
         // HTTP Servers & Clients
         Nyholm\Psr7\Factory\Psr17Factory::class => autowire(),

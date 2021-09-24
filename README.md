@@ -64,17 +64,19 @@ Open your browser on: http://localhost:3333
 Look into files:
 
 - `launch.php` - setup, DI, Annotations, dispatch `SatelliteApp` event
-- `/config/config.php` - meta config
-- `/config/dependencies.php` - definitions for PHP-DI
-- `/config/events.php` - define app components flow
-- `/config/pipeline.php` - setup PSR middlewares and pipeline
+- `/config/*.php`, [app config and wiring](#config)
 
 ## Setup
 
-Install app skeleten and dependencies with composer:
+Install app skeleten and dependencies with composer in folder `satellite`:
 
 ```bash
 composer create-project orbiter/satellite-app satellite
+
+# composer with docker on windows:
+docker run -it --rm -v %cd%/satellite:/app composer create-project orbiter/satellite-app .
+# composer with docker on unix:
+docker run -it --rm -v `pwd`/satellite:/app composer create-project orbiter/satellite-app .
 
 cd ./satellite
 ```
@@ -101,14 +103,16 @@ php cli <command> <..attr> <..b>
 
 Includes configurable PHP Dockerfile with:
 
-- PHP 7.4
-- Apache
+- PHP 8.x
+    - with FPM and a few extensions
+    - reusing FPM for a clean CLI worker image
 - OPCache
-- MySQL Client libs (pdo, pdo_mysql, mysqli)
-- Apache Mods: rewrite, deflate, brotli
+- PostgreSQL Client libs (using `pdo`)
+- NGINX base image for local routing
 - customize in [Dockerfile](Dockerfile)
+- a more "production" ready image, preconfigured for building [in CI](.github/workflows/blank.yml) with [docker-compose--prod.yml](docker-compose--prod.yml)
 
-Configs are system originals, see files `docker-*` amd their respective docs.
+For docker image configs see files in `_docker` and `_nginx`.
 
 Start containers specified in `docker-compose.yml`, then open: http://localhost:3333
 
@@ -116,9 +120,15 @@ Start containers specified in `docker-compose.yml`, then open: http://localhost:
 docker-compose up
 
 # open shell in app container
-docker-compose exec app bash
-# use composer integrated in image
-composer require monolog/monolog
+docker-compose exec app sh
+
+# run extra composer container on windows:
+docker run -it --rm -v %cd%:/app composer dumpautoload
+# run extra composer container on unix:
+docker run -it --rm -v `pwd`:/app composer dumpautoload
+
+# run tests with temporary `app` container:
+docker-compose run -T --rm app sh -c "cd /var/www/html && ./vendor/bin/phpunit --testdox tests"
 ```
 
 ### Web-Server
@@ -126,16 +136,16 @@ composer require monolog/monolog
 On a web-server the `web/index.php` file serves as public entry point.
 
 - Apache: point server/vhost root to `/web` and use the included `.htaccess`
-- nginx directive:
+- nginx example directive:
 
-```.conf
-location / {
-    # DOCROOT must contain absolute path to `web`, in this example 
-    root {DOCROOT};
-    # try to serve file directly, fallback to index.php
-    try_files $uri /index.php$is_args$args;
-}
-```
+    ```.conf
+    location / {
+        # DOCROOT must contain absolute path to `web`, in this example 
+        root {DOCROOT};
+        # try to serve file directly, fallback to index.php
+        try_files $uri /index.php$is_args$args;
+    }
+    ```
 
 ### Config
 
@@ -143,9 +153,13 @@ Use `.env` to add configuration, see [Features](docs) for how to configure/setup
 
 Default's config includes:
 
-- `env` if in production or not in production
+- env var `env` if in production or not in production
     - with value `prod` it is assumed in the App (not the framework) that it is in production
     - use `$_ENV['env'] === 'prod'` to check for production
+- `/config/config.php` - meta config
+- `/config/dependencies.php` - definitions for PHP-DI
+- `/config/events.php` - define app components flow
+- `/config/pipeline.php` - setup PSR middlewares and pipeline
 
 ## PSRs
 
@@ -187,7 +201,7 @@ Most packages can be replaced with any PSR implementation or another framework o
     - the core + event handler
     - implements **PSR-14** Event Dispatcher and Listener
     - with invoker to execute anything, **PSR-11** compatible
-    - see [Events](docs/feature-events.md)
+    - see [package repository](https://github.com/bemit/satellite)
 - `orbiter/satellite-console`
     - console execution
     - console command annotations
@@ -196,9 +210,9 @@ Most packages can be replaced with any PSR implementation or another framework o
 - `orbiter/satellite-response`
     - middleware pipe execution
     - implements **PSR-15** through `equip/dispatch`, **PSR-11** compliant
-    - implements **PSR-7,17** through `nyholm/psr7` and `nyholm/psr7-server` 
+    - implements **PSR-7,17** through `nyholm/psr7` and `nyholm/psr7-server`
     - with simple emitter by `narrowspark/http-emitter`
-    - see [Middleware](docs/feature-middleware.md) 
+    - see [Middleware](docs/feature-middleware.md)
 - `orbiter/satellite-route`
     - routes by annotations
     - uses [nikic/fast-route](https://github.com/nikic/FastRoute) as router
@@ -214,7 +228,7 @@ Most packages can be replaced with any PSR implementation or another framework o
 - Dependency Injection
     - implements **PSR-11** through [php-di](http://php-di.org)
     - see [DI](docs/feature-di.md)
-    
+
 A lot of work is done by PSR-15 HTTP Middlewares provided by [github.com/middlewares](https://github.com/middlewares), find more [awesome middlewares](https://github.com/middlewares/awesome-psr15-middlewares).
 
 ## Features
@@ -233,9 +247,7 @@ Feel free to reach out for a [training request](https://mlbr.xyz).
 
 ## License
 
-This project is free software distributed under the **MIT License**.
-
-See: [LICENSE](LICENSE).
+This project is free software distributed under the [**MIT License**](LICENSE).
 
 ### Contributors
 

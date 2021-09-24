@@ -1,4 +1,4 @@
-FROM php:8-fpm-alpine AS php_fpm
+FROM php:8.0-fpm-alpine AS php_fpm
 #
 ## Stage: All basic dependencies and settings used accross workers and apis (fpm)
 ##
@@ -41,27 +41,49 @@ RUN sed -i '/^;pm.status_path/s/^;//' /usr/local/etc/php-fpm.d/www.conf
 RUN sed -i -e 's/expose_php = On/expose_php = Off/' "$PHP_INI_DIR/php.ini"
 RUN sed -i 's/^max_execution_time .*$/max_execution_time = 60/' "$PHP_INI_DIR/php.ini"
 RUN sed -i 's/^max_input_time .*$/max_input_time = 60/' "$PHP_INI_DIR/php.ini"
-RUN sed -i 's/^memory_limit .*$/memory_limit = 256M/' "$PHP_INI_DIR/php.ini"
+RUN sed -i 's/^memory_limit .*$/memory_limit = 512M/' "$PHP_INI_DIR/php.ini"
 RUN sed -i 's/^upload_max_filesize .*$/upload_max_filesize = 256M/' "$PHP_INI_DIR/php.ini"
 RUN sed -i 's/^max_file_uploads .*$/max_file_uploads = 20/' "$PHP_INI_DIR/php.ini"
 RUN sed -i 's/^variables_order .*$/variables_order = "EGPCS"/' "$PHP_INI_DIR/php.ini"
 
-COPY ./_docker/docker-opcache.ini /usr/local/etc/php/conf.d/custom-opcache.ini
+COPY ./_docker/docker-opcache--prod.ini /usr/local/etc/php/conf.d/custom-opcache.ini
+
+COPY ./composer.json /var/www/html/composer.json
+COPY ./composer.lock /var/www/html/composer.lock
 
 #
 ## Stage: composer dependencies
 ##
 FROM composer as php_vendor
 
+# this copies only `composer.json` and `.lock`
+COPY --from=php_fpm /var/www/html /app
+
+RUN composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader --ignore-platform-reqs
+
 #
 ## Stage: Make Bundled App
 ##
 FROM php_fpm as php_build
 
+RUN apk add nodejs npm
+
+# build:
+COPY ./ /var/www/html
+RUN rm -rf /var/www/html/vendor
+COPY --from=php_vendor /app/vendor /var/www/html/vendor
+
+RUN rm -rf /var/www/html/tmp
+RUN chown -R www-data:www-data /var/www/html
+RUN find /var/www/html -type f -exec chmod 660 {} + -o -type d -exec chmod 770 {} +
+# :build
+
 #
 ## Stage: Crontab Worker Image - Final
 ##
-FROM php_build as php_worker
+FROM php_fpm as php_worker
+
+COPY --from=php_build /var/www/html /var/www/html
 
 RUN rm /usr/local/etc/php-fpm.conf && rm /usr/local/etc/php-fpm.conf.default \
     && rm -rf /usr/local/etc/php-fpm.d
@@ -77,6 +99,8 @@ CMD ["supervisord", "-c", "/etc/supervisor.conf"]
 #
 ## Stage: PHP-FPM Image - Final
 ##
-FROM php_build as php_api
+FROM php_fpm as php_api
 
+COPY --from=php_build /var/www/html /var/www/html
 
+CMD ["sh", "-c", "cd /var/www/html && sudo su -c www-data php cli warmup ; php-fpm"]

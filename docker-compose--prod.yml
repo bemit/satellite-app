@@ -2,13 +2,16 @@ version: "3.9"
 
 services:
   app:
+    image: "bemiteu/satellite-app:${APP_BUILD_VERSION}"
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: DockerfileProduction
       target: php_api
+      cache_from:
+        - bemiteu/satellite-app
     environment:
-      env: dev
-      satellite_index_log_perf: "yes"
+      env: prod
+      #satellite_index_log_perf: "yes"
       DOCKER_SERVICE_ID: "{{.Service.ID}}"
       DOCKER_SERVICE_NAME: "{{.Service.Name}}"
       DOCKER_SERVICE_LABELS: "{{.Service.Labels}}"
@@ -21,33 +24,23 @@ services:
       - ./:/var/www/html
 
   worker:
+    image: "bemiteu/satellite-app-worker:${APP_BUILD_VERSION}"
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: DockerfileProduction
       target: php_worker
-    command: /bin/sh -c "exit 0"
+      cache_from:
+        - bemiteu/satellite-app-worker
     environment:
-      env: dev
-      satellite_index_log_perf: "yes"
+      env: prod
     volumes:
       - ./:/var/www/html
 
-  nginx:
-    build:
-      context: ./_nginx
-      dockerfile: Dockerfile
-    depends_on:
-      - app
-    ports:
-      - '3333:80'
-
-  mailhog:
-    image: mailhog/mailhog
-    logging:
-      driver: 'none'  # disable saving logs
-    expose:
-      # port for other containers
-      - '1025'
-    ports:
-      - "1030:1025"
-      - "8030:8025"
+#  nginx:
+#    build:
+#      context: ./_nginx
+#      dockerfile: Dockerfile
+#    depends_on:
+#      - app
+#    ports:
+#      - '3333:80'

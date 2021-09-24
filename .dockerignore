@@ -1,0 +1,7 @@
+tmp
+vendor
+**/node_modules
+8
+supervisord.log
+supervisord.pid
+.phpunit.result.cache

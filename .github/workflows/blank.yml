@@ -1,0 +1,138 @@
+name: Hub CI
+
+env:
+  DOCKER_BUILDKIT: 1
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build_node:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          token: ${{ secrets.GIT_ACCESS_TOKEN }}
+      - name: Set Branch or Tag
+        id: vars
+        run: echo ::set-output name=short_ref::${CI_COMMIT_REF_NAME}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Getting PHP App together
+        run: |
+          touch .env
+          echo "SOME_ENV=yes" >> .env
+
+      - name: Docker Registry login
+        run: docker login -u ${{ secrets.DOCKER_REG_USER }} -p ${{ secrets.DOCKER_REG_PASS }}
+      - name: Docker pull
+        run: docker-compose -f docker-compose--prod.yml pull
+        env:
+          APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
+      - name: Docker build
+        run: docker-compose -f docker-compose--prod.yml build --build-arg BUILDKIT_INLINE_CACHE=1
+        env:
+          APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
+      - name: Docker Registry publish
+        run: docker-compose -f docker-compose--prod.yml push
+        env:
+          APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
+
+  tests:
+    name: Tests
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      PHP_EXTENSIONS: dom, json, libxml, mbstring, pdo_sqlite, soap, xml, xmlwriter, :apcu, :imagick
+      PHP_INI_VALUES: memory_limit=-1, assert.exception=1, zend.assertions=1, error_reporting=-1, log_errors_max_len=0, display_errors=On
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          # todo: test windows when php-actions/composer issue is solved https://github.com/php-actions/composer/issues/43
+          #- windows-latest
+
+        php-version:
+          - "7.4"
+          - "8.0"
+          - "8.1"
+
+        compiler:
+          - default
+
+        dependencies:
+          - lowest
+          - highest
+
+        include:
+          - os: ubuntu-latest
+            php-version: "7.4"
+            compiler: jit
+            dependencies: highest
+
+          - os: ubuntu-latest
+            php-version: "8.0"
+            compiler: jit
+            dependencies: highest
+
+          - os: ubuntu-latest
+            php-version: "8.1"
+            compiler: jit
+            dependencies: highest
+
+    steps:
+      - name: Configure git to avoid issues with line endings
+        if: matrix.os == 'windows-latest'
+        run: git config --global core.autocrlf false
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Override PHP ini values for JIT compiler
+        if: matrix.compiler == 'jit'
+        run: echo "PHP_INI_VALUES::assert.exception=1, memory_limit=-1, zend.assertions=1, opcache.enable=1, opcache.enable_cli=1, opcache.optimization_level=-1, opcache.jit=1255, opcache.jit_buffer_size=32M" >> $GITHUB_ENV
+
+      - name: Install PHP with extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          ini-values: ${{ env.PHP_INI_VALUES }}
+          tools: none
+
+      - name: Install lowest dependencies with composer
+        if: matrix.dependencies == 'lowest'
+        uses: php-actions/composer@v6
+        with:
+          command: update
+          args: --no-ansi --no-interaction --no-progress --prefer-lowest
+
+      - name: Install highest dependencies with composer
+        if: matrix.dependencies == 'highest'
+        uses: php-actions/composer@v6
+        with:
+          command: update
+          args: --no-ansi --no-interaction --no-progress
+
+      - name: Run tests with phpunit
+        uses: php-actions/phpunit@v3
+        with:
+          configuration: phpunit-ci.xml
+          bootstrap: vendor/autoload.php
+          #args: --bootstrap=vendor/autoload.php
