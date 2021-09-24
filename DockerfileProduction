@@ -17,7 +17,7 @@ RUN apk add \
 
 # `mbstring` is not needed, already configured in base image for php-alpine
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) opcache \
+    && docker-php-ext-install opcache \
         gd zip tokenizer xml \
         pdo pdo_pgsql pcntl \
         # for better uuid:

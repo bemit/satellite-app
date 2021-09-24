@@ -50,7 +50,6 @@ jobs:
       - name: Publish App image `master` with tag `latest`
         if: github.ref == 'refs/heads/master'
         run: |
-          docker image rm bemiteu/satellite-app:latest
           docker tag bemiteu/satellite-app:master bemiteu/satellite-app:latest
           docker push bemiteu/satellite-app:latest
 
