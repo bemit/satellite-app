@@ -1,8 +1,16 @@
-<testsuites>
-    <testsuite name="App Tests">
-        <directory>/tests</directory>
-    </testsuite>
-    <testsuite name="Orbiter Satellite Tests">
-        <directory>/vendor/orbiter/satellite/tests</directory>
-    </testsuite>
-</testsuites>
+<phpunit>
+    <testsuites>
+        <testsuite name="Satellite App Tests">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <coverage includeUncoveredFiles="true"
+              processUncoveredFiles="true"
+              pathCoverage="false"
+              ignoreDeprecatedCodeUnits="true"
+              disableCodeCoverageIgnore="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </coverage>
+</phpunit>

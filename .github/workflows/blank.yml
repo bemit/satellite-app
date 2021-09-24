@@ -1,4 +1,4 @@
-name: Hub CI
+name: Satellite CI
 
 env:
   DOCKER_BUILDKIT: 1
@@ -13,23 +13,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_node:
+  build_app:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [12.x]
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: recursive
-          token: ${{ secrets.GIT_ACCESS_TOKEN }}
       - name: Set Branch or Tag
         id: vars
         run: echo ::set-output name=short_ref::${CI_COMMIT_REF_NAME}
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
 
       - name: Getting PHP App together
         run: |
