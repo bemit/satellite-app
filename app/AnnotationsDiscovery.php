@@ -78,6 +78,7 @@ class AnnotationsDiscovery {
             ...($this->discovery->getDiscovered(KernelRoute\Annotations\Get::class)),
             ...($this->discovery->getDiscovered(KernelRoute\Annotations\Route::class)),
             ...($this->discovery->getDiscovered(KernelRoute\Annotations\Post::class)),
+            ...($this->discovery->getDiscovered(KernelRoute\Annotations\Patch::class)),
             ...($this->discovery->getDiscovered(KernelRoute\Annotations\Put::class)),
             ...($this->discovery->getDiscovered(KernelRoute\Annotations\Delete::class)),
         ]);
