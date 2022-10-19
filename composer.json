@@ -3,6 +3,7 @@
     "license": "MIT",
     "description": "Easy to use Event & Middleware Mini-Framework, powered by popular projects and PSR's",
     "type": "project",
+    "version": "0.4.0",
     "require": {
         "php": ">=8.1",
         "ext-json": "*",

@@ -50,8 +50,10 @@ Open your browser on: http://localhost:3333
 
 Look into files:
 
-- `assemble.php`/`launch.php` - setup, DI, Annotations, dispatch `SatelliteApp` event
-- `/config/*.php`, [app config and wiring](#config)
+- [`config`](./config) folder with [app config and wiring](#config)
+- [`assemble.php`](./assemble.php) include composer autoload, setup DI, Annotations, gather configurations and create the system modules from config
+- [`launch.php`](./launch.php) runs `assemble()` and dispatches the `SatelliteApp` event
+- [`app`](./app) folder with a basic commands and route handler structure
 
 ## Setup
 
@@ -63,9 +65,11 @@ composer create-project orbiter/satellite-app satellite
 
 # with composer and docker on windows:
 docker run -it --rm -v %cd%/satellite:/app composer create-project orbiter/satellite-app .
+docker run -it --rm -v %cd%/satellite:/app composer create-project --stability=dev orbiter/satellite-app:dev-master .
 
 # with composer and docker on unix:
 docker run -it --rm -v `pwd`/satellite:/app composer create-project orbiter/satellite-app .
+docker run -it --rm -v `pwd`/satellite:/app composer create-project --stability=dev orbiter/satellite-app:dev-master .
 
 # go into project folder:
 cd ./satellite
@@ -109,9 +113,9 @@ Includes configurable PHP Dockerfile with:
 - customize in [Dockerfile](Dockerfile)
 - a more "production" ready image, preconfigured for building [in CI](.github/workflows/blank.yml) with [docker-compose--prod.yml](docker-compose--prod.yml)
 
-For docker image configs see files in `_docker` and `_nginx`.
+For docker image configs see files in [`_docker`](./_docker) and [`_nginx`](./_nginx).
 
-Start containers specified in `docker-compose.yml`, then open: [http://localhost:3333](http://localhost:3333)
+Start containers specified in [`docker-compose.yml`](./docker-compose.yml), then open: [http://localhost:3333](http://localhost:3333)
 
 ```bash
 docker-compose up
@@ -152,7 +156,9 @@ Default's config includes:
     - with value `prod` it is assumed in the App (not the framework) that it is in production
     - use `$_ENV['env'] === 'prod'` to check for production
     - for dev-error pages: add var `dev.editor` with one value of `PrettyPageHandler::EDITOR_*` to link `whoops` "open file" with IDE
-- `/config/config.php` - meta config
+- `/config/config.php` - main config
+    - configures which other config files are included
+    - aggregates and caches the config for production usage
 - `/config/dependencies.php` - definitions for PHP-DI
 - `/config/events.php` - define app components flow
 - `/config/pipeline.php` - setup PSR middlewares and pipeline
@@ -242,7 +248,7 @@ It is build upon [PSRs](https://www.php-fig.org/psr/) and popular, specialized p
     - system setup and core wire-up, e.g. from `$config` to a cached PSR container
     - see [package repository](https://github.com/bemit/satellite-system)
 
-A lot of work is done by PSR-15 HTTP Middlewares provided by [github.com/middlewares](https://github.com/middlewares), find more [awesome middlewares](https://github.com/middlewares/awesome-psr15-middlewares).
+A lot of work for APIs is done by PSR-15 HTTP Middleware, find more [awesome middlewares](https://github.com/middlewares/awesome-psr15-middlewares).
 
 ## Download Build
 
