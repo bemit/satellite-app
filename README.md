@@ -19,7 +19,7 @@ Easy to use Event & Middleware Framework, powered by popular micro-libraries and
 - [Setup](#setup)
     - [Config](#config)
 - [Implemented PSRs](#psrs)
-- [Used Packages](#used-packages)
+- [Packages](#packages)
 - [Download Build](#download-build)
 - [License](#license)
 
@@ -124,7 +124,6 @@ docker-compose run --rm worker php cli demo
 
 # run extra composer container on windows:
 docker run -it --rm -v %cd%:/app composer dumpautoload
-docker run -it --rm -v %cd%:/app composer require cache/filesystem-adapter
 # run extra composer container on unix:
 docker run -it --rm -v `pwd`:/app composer dumpautoload
 
@@ -203,48 +202,43 @@ It is build upon [PSRs](https://www.php-fig.org/psr/) and popular, specialized p
 
 > 📦 = included in `satellite-app` template
 
-## Used Packages
+## Packages
 
-Orbiter has optimized packages, each encapsulates one system part or extension.
-
-Most packages can be replaced with any PSR implementation or another framework or nothing at all.
-
-- `orbiter/satellite`
-    - the core + event handler
+- `orbiter/satellite` [![Latest Stable Version](https://poser.pugx.org/orbiter/satellite/version.svg?style=flat-square)](https://packagist.org/packages/orbiter/satellite)
     - implements **PSR-14** Event Dispatcher and Listener
     - with invoker to execute anything, **PSR-11** compatible
     - optional event-handler based profiling
     - see [package repository](https://github.com/bemit/satellite)
-- `orbiter/satellite-console`
+- `orbiter/satellite-console` [![Latest Stable Version](https://poser.pugx.org/orbiter/satellite-console/version.svg?style=flat-square)](https://packagist.org/packages/orbiter/satellite-console)
     - console execution
     - console command annotations
     - uses [getopt-php](https://github.com/getopt-php/getopt-php)
     - see [package repository](https://github.com/bemit/satellite-console)
-- `orbiter/satellite-response`
+- `orbiter/satellite-response` [![Latest Stable Version](https://poser.pugx.org/orbiter/satellite-response/version.svg?style=flat-square)](https://packagist.org/packages/orbiter/satellite-response)
     - middleware pipe execution
     - implements **PSR-15** through `equip/dispatch`, **PSR-11** compliant
     - implements **PSR-7,17** through `nyholm/psr7` and `nyholm/psr7-server`
     - with simple emitter by `narrowspark/http-emitter`
     - see [package repository](https://github.com/bemit/satellite-response)
-- `orbiter/satellite-route`
+- `orbiter/satellite-route` [![Latest Stable Version](https://poser.pugx.org/orbiter/satellite-route/version.svg?style=flat-square)](https://packagist.org/packages/orbiter/satellite-route)
     - routes by annotations
     - uses [nikic/fast-route](https://github.com/nikic/FastRoute) as router
     - made for PSR middleware usage, but not limited
     - see [package repository](https://github.com/bemit/satellite-route)
-- `orbiter/annotations-util`
+- `orbiter/annotations-util` [![Latest Stable Version](https://poser.pugx.org/orbiter/annotations-util/version.svg?style=flat-square)](https://packagist.org/packages/orbiter/annotations-util)
     - annotations by `doctrine/annotations` with cached reflections
     - get classes, methods and properties which are annotated
     - see [AnnotationsUtil](https://github.com/bemit/orbiter-annotations-util)
-- `orbiter/satellite-whoops`
+- `orbiter/satellite-whoops` [![Latest Stable Version](https://poser.pugx.org/orbiter/satellite-whoops/version.svg?style=flat-square)](https://packagist.org/packages/orbiter/satellite-whoops)
     - Whoops error display for CLI and Routes
-    - only when `$_ENV['env']` not `prod` (configurable in [`launch.php`](./launch.php))
-- `orbiter/satellite-config`
+    - only when `$_ENV['env']` not `prod` (configurable in [`assemble.php`](./assemble.php))
+- `orbiter/satellite-config` [![Latest Stable Version](https://poser.pugx.org/orbiter/satellite-config/version.svg?style=flat-square)](https://packagist.org/packages/orbiter/satellite-config)
     - simple config aggregator with caching
     - see [package repository](https://github.com/bemit/satellite-config)
-- `orbiter/satellite-launch`
+- `orbiter/satellite-launch` [![Latest Stable Version](https://poser.pugx.org/orbiter/satellite-launch/version.svg?style=flat-square)](https://packagist.org/packages/orbiter/satellite-launch)
     - `SatelliteApp` event data objects
     - see [package repository](https://github.com/bemit/satellite-launch)
-- `orbiter/satellite-system`
+- `orbiter/satellite-system` [![Latest Stable Version](https://poser.pugx.org/orbiter/satellite-system/version.svg?style=flat-square)](https://packagist.org/packages/orbiter/satellite-system)
     - system setup and core wire-up, e.g. from `$config` to a cached PSR container
     - see [package repository](https://github.com/bemit/satellite-system)
 
