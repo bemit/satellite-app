@@ -23,9 +23,9 @@
         "middlewares/request-handler": "^2.0.0",
         "middlewares/payload": "^3.0.0",
         "php-di/php-di": "^6.4.0",
-        "vlucas/phpdotenv": "^5.1.0",
+        "vlucas/phpdotenv": "^5.5.0",
         "monolog/monolog": "^3.2.0",
-        "guzzlehttp/guzzle": "^7.0",
+        "guzzlehttp/guzzle": "^7.5.0",
         "cache/filesystem-adapter": "^1.2"
     },
     "require-dev": {
