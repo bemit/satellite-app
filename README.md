@@ -16,28 +16,14 @@
 
 Easy to use Event & Middleware Framework, powered by popular micro-libraries and based on [PSRs](https://www.php-fig.org/psr/).
 
->
-> todo: current `/docs/` are outdated
->
-
 - [Setup](#setup)
     - [Config](#config)
 - [Implemented PSRs](#psrs)
 - [Used Packages](#used-packages)
-- Features
-    - [Events](docs/feature-events.md)
-    - [Routing](docs/feature-routing.md)
-        - [Middleware](docs/feature-middleware.md)
-    - [Console](docs/feature-console.md)
-    - [DI](docs/feature-di.md)
-    - [Annotations](docs/#setup-annotations)
-- Extend
-    - replace [System Event](docs/satellite-events.md) handlers
-    - extend/replace the core [Event Dispatcher or Invoker](docs/#extend-event-dispatcher-or-invoker)
 - [Download Build](#download-build)
 - [License](#license)
 
-Supports PHP 7.4.1+ and 8+ and [composer](https://getcomposer.org/)
+Supports PHP 8.1+ and [composer](https://getcomposer.org/)
 
 ## TL;DR
 
@@ -48,7 +34,8 @@ composer create-project orbiter/satellite-app ./satellite
 
 cd ./satellite
 
-# create `.env` file, should add for dev: `env=dev`
+# create `.env` file, 
+# add for local-dev: `env=local`
 touch .env 
 
 # start PHP Dev Server
@@ -63,7 +50,7 @@ Open your browser on: http://localhost:3333
 
 Look into files:
 
-- `launch.php` - setup, DI, Annotations, dispatch `SatelliteApp` event
+- `assemble.php`/`launch.php` - setup, DI, Annotations, dispatch `SatelliteApp` event
 - `/config/*.php`, [app config and wiring](#config)
 
 ## Setup
@@ -71,15 +58,25 @@ Look into files:
 Install app skeleten and dependencies with composer in folder `satellite`:
 
 ```bash
+# with composer installed on machine:
 composer create-project orbiter/satellite-app satellite
 
-# composer with docker on windows:
+# with composer and docker on windows:
 docker run -it --rm -v %cd%/satellite:/app composer create-project orbiter/satellite-app .
-# composer with docker on unix:
+
+# with composer and docker on unix:
 docker run -it --rm -v `pwd`/satellite:/app composer create-project orbiter/satellite-app .
 
+# go into project folder:
 cd ./satellite
 ```
+
+Run with:
+
+- [Linux, PHP Dev Server](#linux-php-dev-server)
+- [PHP Command-Line](#php-command-line)
+- [Docker, docker-compose](#docker-docker-compose)
+- [Web-Server](#web-server)
 
 ### Linux, PHP Dev Server
 
@@ -103,7 +100,7 @@ php cli <command> <..attr> <..b>
 
 Includes configurable PHP Dockerfile with:
 
-- PHP 8.x
+- PHP 8.1
     - with FPM and a few extensions
     - reusing FPM for a clean CLI worker image
 - OPCache
@@ -114,7 +111,7 @@ Includes configurable PHP Dockerfile with:
 
 For docker image configs see files in `_docker` and `_nginx`.
 
-Start containers specified in `docker-compose.yml`, then open: http://localhost:3333
+Start containers specified in `docker-compose.yml`, then open: [http://localhost:3333](http://localhost:3333)
 
 ```bash
 docker-compose up
@@ -122,8 +119,12 @@ docker-compose up
 # open shell in app container
 docker-compose exec app sh
 
+# run command in temporary worker container
+docker-compose run --rm worker php cli demo
+
 # run extra composer container on windows:
 docker run -it --rm -v %cd%:/app composer dumpautoload
+docker run -it --rm -v %cd%:/app composer require cache/filesystem-adapter
 # run extra composer container on unix:
 docker run -it --rm -v `pwd`:/app composer dumpautoload
 
@@ -138,27 +139,20 @@ docker run -i --rm bemiteu/satellite-app:master sh -c "cd /var/www && wget -O ph
 
 On a web-server the `web/index.php` file serves as public entry point.
 
-- Apache: point server/vhost root to `/web` and use the included `.htaccess`
-- nginx example directive:
+**Apache:** point server/vhost root to `/web` and use the included `.htaccess`
 
-    ```.conf
-    location / {
-        # DOCROOT must contain absolute path to `web`, in this example 
-        root {DOCROOT};
-        # try to serve file directly, fallback to index.php
-        try_files $uri /index.php$is_args$args;
-    }
-    ```
+**NGINX**: example files in [_nginx](./_nginx).
 
-### Config
+## Config
 
-Use `.env` to add configuration, see [Features](docs) for how to configure/setup different logic parts.
+Use e.g. `.env` to add configuration.
 
 Default's config includes:
 
 - env var `env` if in production or not in production
     - with value `prod` it is assumed in the App (not the framework) that it is in production
     - use `$_ENV['env'] === 'prod'` to check for production
+    - for dev-error pages: add var `dev.editor` with one value of `PrettyPageHandler::EDITOR_*` to link `whoops` "open file" with IDE
 - `/config/config.php` - meta config
 - `/config/dependencies.php` - definitions for PHP-DI
 - `/config/events.php` - define app components flow
@@ -170,29 +164,44 @@ This app serves as mini-framework, with PSR powered libraries, ready-to-use Anno
 
 It is build upon [PSRs](https://www.php-fig.org/psr/) and popular, specialized packages implementing them or other great stuff.
 
-- **PSR-3** - Logger, use: [monolog](https://github.com/Seldaek/monolog)
-- **PSR-4** - autoloading classes and forget require
+- **PSR-3** - Logger
+    - 📦 `monolog/monolog`
+    - [more implementations](https://packagist.org/providers/psr/log-implementation)
+- **PSR-4** - autoload classes and forget `require_once`
     - handled by composer, more in [composer docs.](https://getcomposer.org/doc/01-basic-usage.md#autoloading)
 - **PSR-1,12** - Code Style Guides
-    - but we break the brackets location rule, same-line instead of next-list for opening `{`
-- **PSR-6** - Cache, use a [PHP-Cache Bridge](http://www.php-cache.com/en/latest/)
-    - *currently* integrates Doctrine cache for some features
+    - except brackets location rule: same-line instead of next-line for opening `{`
+- **PSR-6** - Cache
+    - 📦 `cache/filesystem-adapter`
+    - includes [`FilesystemCachePoolNormalized`](./app/Lib/FilesystemCachePoolNormalized.php) for `Doctrine\Common\Annotations\PsrCachedReader` compatibility
+    - [more implementations](https://packagist.org/providers/psr/cache-implementation)
 - **PSR-7** - HTTP Message
+    - 📦 `nyholm\psr7`
     - request and response data definitions
+    - used further by `PSR-15`, `PSR-17` and `PSR-18`
 - **PSR-11** - Container for InterOp
-    - full support for any compliant container
-    - use in console command handlers
-    - use in event handlers
-    - use in middleware handlers
+    - 📦 `php-di/php-di`
+    - service container for ease and modularity
+    - dependency injection with `@Annotations`, `@var` PHPDoc and Reflection support
 - **PSR-14** - Event Dispatcher and Listener
+    - 📦 `orbiter/satellite`
     - as the core of how things are put together
 - **PSR-15** - HTTP Handlers
-    - handling requests with executing the middleware pipe
-- **PSR-16** - Simple Cache, use e.g. [Doctrine SimpleCache adapter](https://github.com/Roave/DoctrineSimpleCache)
-- **PSR-17** - HTTP Factories are used but not all features are wired (partly)
-    - create context about request
-    - useful for uploads and streams
-- **PSR-18** - HTTP Client *(todo)*
+    - 📦 `orbiter/satellite-response`
+    - handle route requests with a powerful middleware pipeline
+- **PSR-16** - Simple Cache
+    - 📦 `cache/filesystem-adapter`
+    - [more implementations](https://packagist.org/providers/psr/simple-cache-implementation)
+- **PSR-17** - HTTP Factories
+    - 📦 `nyholm\psr7`
+    - context about request
+    - for request & response initiations
+- **PSR-18** - HTTP Client
+    - 📦 `guzzlehttp/guzzle`
+    - send requests to other APIs
+    - [more implementations](https://packagist.org/providers/psr/http-client-implementation)
+
+> 📦 = included in `satellite-app` template
 
 ## Used Packages
 
@@ -204,41 +213,42 @@ Most packages can be replaced with any PSR implementation or another framework o
     - the core + event handler
     - implements **PSR-14** Event Dispatcher and Listener
     - with invoker to execute anything, **PSR-11** compatible
+    - optional event-handler based profiling
     - see [package repository](https://github.com/bemit/satellite)
 - `orbiter/satellite-console`
     - console execution
     - console command annotations
     - uses [getopt-php](https://github.com/getopt-php/getopt-php)
-    - see [Console](docs/feature-console.md)
+    - see [package repository](https://github.com/bemit/satellite-console)
 - `orbiter/satellite-response`
     - middleware pipe execution
     - implements **PSR-15** through `equip/dispatch`, **PSR-11** compliant
     - implements **PSR-7,17** through `nyholm/psr7` and `nyholm/psr7-server`
     - with simple emitter by `narrowspark/http-emitter`
-    - see [Middleware](docs/feature-middleware.md)
+    - see [package repository](https://github.com/bemit/satellite-response)
 - `orbiter/satellite-route`
     - routes by annotations
     - uses [nikic/fast-route](https://github.com/nikic/FastRoute) as router
     - made for PSR middleware usage, but not limited
-    - see [Routing](docs/feature-routing.md)
+    - see [package repository](https://github.com/bemit/satellite-route)
 - `orbiter/annotations-util`
     - annotations by `doctrine/annotations` with cached reflections
     - get classes, methods and properties which are annotated
     - see [AnnotationsUtil](https://github.com/bemit/orbiter-annotations-util)
 - `orbiter/satellite-whoops`
     - Whoops error display for CLI and Routes
-    - only when `$_ENV['env']` not `prod` (configurable in `launch.php`)
-- Dependency Injection
-    - implements **PSR-11** through [php-di](http://php-di.org)
-    - see [DI](docs/feature-di.md)
+    - only when `$_ENV['env']` not `prod` (configurable in [`launch.php`](./launch.php))
+- `orbiter/satellite-config`
+    - simple config aggregator with caching
+    - see [package repository](https://github.com/bemit/satellite-config)
+- `orbiter/satellite-launch`
+    - `SatelliteApp` event data objects
+    - see [package repository](https://github.com/bemit/satellite-launch)
+- `orbiter/satellite-system`
+    - system setup and core wire-up, e.g. from `$config` to a cached PSR container
+    - see [package repository](https://github.com/bemit/satellite-system)
 
 A lot of work is done by PSR-15 HTTP Middlewares provided by [github.com/middlewares](https://github.com/middlewares), find more [awesome middlewares](https://github.com/middlewares/awesome-psr15-middlewares).
-
-## Features
-
-Satellite integrates into a micro framework to rapidly build PHP server apps, mostly - but not limited - for non-human clients.
-
-See [docs](docs) for further information.
 
 ## Download Build
 
@@ -246,7 +256,7 @@ There is no downloadable version - see [Setup](#setup) on how to install with co
 
 We use composer as package manager, like in any modern PHP project.
 
-Feel free to reach out for a [training request](https://mlbr.xyz).
+Feel free to reach out for a [training request](https://bemit.codes).
 
 ## License
 
@@ -258,4 +268,4 @@ By committing your code to the code repository you agree to release the code und
 
 ***
 
-Maintained by [Michael Becker](https://mlbr.xyz)
+Maintained by [Michael Becker](https://i-am-digital.eu)

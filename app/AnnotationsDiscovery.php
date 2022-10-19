@@ -3,78 +3,76 @@
 namespace App;
 
 use DI\Container;
-use Doctrine\Common\Cache;
-use DI\Annotation\Inject;
 use Invoker\InvokerInterface;
 use Orbiter\AnnotationsUtil\AnnotationDiscovery;
 use Orbiter\AnnotationsUtil\CodeInfo;
+use Psr\Cache\CacheItemPoolInterface;
 use Satellite\KernelConsole;
 use Satellite\KernelRoute;
 use Satellite\Response\ResponsePipe;
-use Satellite\SatelliteAppInterface;
+use Satellite\Launch\SatelliteAppInterface;
 
 class AnnotationsDiscovery {
-    public const CACHE_ANNOTATIONS_DISCOVERY = 'launcher:annotations_discovery';
-    public const ANNOTATIONS_DISCOVERY = 'annotations';
-    /**
-     * @Inject
-     */
+    public const CACHE_ANNOTATIONS_DISCOVERY = 'launcher.annotations_discovery';
+    public const ANNOTATIONS_DISCO_CONSOLE = 'annotations_disco_console';
+    public const ANNOTATIONS_DISCO_ROUTE = 'annotations_disco_route';
+
     protected AnnotationDiscovery $discovery;
-    /**
-     * @Inject
-     */
-    protected Cache\PhpFileCache $cache;
-    /**
-     * @var Container
-     */
-    protected Container $container;
-    /**
-     * @Inject
-     */
     protected InvokerInterface $invoker;
 
-    /**
-     * @param CodeInfo $code_info
-     * @param Container $container
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
-     * @throws \JsonException
-     * @throws \Orbiter\AnnotationsUtil\CodeInfoCacheFileException
-     */
-    public function __construct(CodeInfo $code_info, Container $container) {
+    protected ?CacheItemPoolInterface $cache;
+    protected Container $container;
+    protected CodeInfo $code_info;
+
+    public function __construct(
+        CodeInfo                $code_info,
+        Container               $container,
+        InvokerInterface        $invoker,
+        AnnotationDiscovery     $discovery,
+        ?CacheItemPoolInterface $cache = null,
+    ) {
+        $this->code_info = $code_info;
         $this->container = $container;
-        $config = $container->get('config');
-        if(isset($config['code_info'])) {
-            foreach($config['code_info'] as $name => $paths) {
-                $code_info->defineDirs($name, $paths);
-            }
-        }
-        $code_info->process();
+        $this->invoker = $invoker;
+        $this->discovery = $discovery;
+        $this->cache = $cache;
     }
 
     public function discover(SatelliteAppInterface $app): SatelliteAppInterface {
-        if($_ENV['env'] === 'prod' && $this->cache->contains(static::CACHE_ANNOTATIONS_DISCOVERY)) {
-            $this->discovery->setDiscovered($this->cache->fetch(static::CACHE_ANNOTATIONS_DISCOVERY));
-            return $app;
+        $cache_item = null;
+        if($this->cache) {
+            $cache_item = $this->cache->getItem(static::CACHE_ANNOTATIONS_DISCOVERY);
+            if($cache_item->isHit()) {
+                $this->discovery->setDiscovered($cache_item->get());
+                return $app;
+            }
         }
 
-        // Discovering Annotations on classes found for CodeInfo group `annotations`
-        $this->discovery->discoverByAnnotation(self::ANNOTATIONS_DISCOVERY);
+        $discovery_flags = $this->code_info->getFlags();
+        foreach($discovery_flags as $discovery_flag) {
+            $this->discovery->discoverByAnnotation(
+                $this->code_info->getClassNames($discovery_flag)
+            );
+        }
 
-        if($_ENV['env'] === 'prod') {
-            $this->cache->save(static::CACHE_ANNOTATIONS_DISCOVERY, $this->discovery->getAll());
+        if($cache_item) {
+            $cache_item->set($this->discovery->getAll());
+            $this->cache->save($cache_item);
         }
         return $app;
     }
 
     public function bindCommands(KernelConsole\Console $console): KernelConsole\Console {
-        $this->container->set(KernelConsole\CommandDiscovery::CONTAINER_ID, $this->discovery->getDiscovered(KernelConsole\Annotations\Command::class));
-        $this->invoker->call([KernelConsole\CommandDiscovery::class, 'registerAnnotations']);
+        $kernel_console_disco = $this->container->get(KernelConsole\CommandDiscovery::class);
+        $kernel_console_disco->registerAnnotations(
+            $this->discovery->getDiscovered(KernelConsole\Annotations\Command::class),
+        );
         return $console;
     }
 
     public function bindRoutes(ResponsePipe $pipe): ResponsePipe {
-        $this->container->set(KernelRoute\RouteDiscovery::CONTAINER_ID, [
+        $kernel_route_disco = $this->container->get(KernelRoute\RouteDiscovery::class);
+        $kernel_route_disco->registerAnnotations([
             ...($this->discovery->getDiscovered(KernelRoute\Annotations\Get::class)),
             ...($this->discovery->getDiscovered(KernelRoute\Annotations\Route::class)),
             ...($this->discovery->getDiscovered(KernelRoute\Annotations\Post::class)),
@@ -82,7 +80,6 @@ class AnnotationsDiscovery {
             ...($this->discovery->getDiscovered(KernelRoute\Annotations\Put::class)),
             ...($this->discovery->getDiscovered(KernelRoute\Annotations\Delete::class)),
         ]);
-        $this->invoker->call([KernelRoute\RouteDiscovery::class, 'registerAnnotations']);
         return $pipe;
     }
 }

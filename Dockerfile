@@ -1,4 +1,4 @@
-FROM php:8-fpm-alpine AS php_fpm
+FROM php:8.1-rc-fpm-alpine AS php_fpm
 #
 ## Stage: All basic dependencies and settings used accross workers and apis (fpm)
 ##
@@ -17,8 +17,8 @@ RUN apk add \
 
 # `mbstring` is not needed, already configured in base image for php-alpine
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) opcache \
-        gd zip tokenizer xml \
+    && docker-php-ext-install opcache \
+        gd zip xml \
         pdo pdo_pgsql pcntl \
         # for better uuid:
         bcmath \

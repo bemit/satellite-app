@@ -23,9 +23,11 @@
     }
 
     // the actual start code:
-    require_once __DIR__ . '/../launch.php';
+    require_once dirname(__DIR__) . '/launch.php';
 
     if(PHP_SAPI === 'cli-server' || $is_not_prod) {
         error_log('... ' . number_format((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']), 6) . 's' . PHP_EOL);
     }
+
+    return true;
 })();

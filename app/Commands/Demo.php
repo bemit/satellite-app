@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use Satellite\Config\ConfigAggregator;
 use Satellite\KernelConsole\Annotations\Command;
 use Satellite\KernelConsole\Annotations\CommandOperand;
 

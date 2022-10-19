@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 use Satellite\Event\EventListenerInterface;
 
 return static function(
-    EventListenerInterface $event,
-    Satellite\SatelliteAppInterface $app
+    EventListenerInterface                 $event,
+    Satellite\Launch\SatelliteAppInterface $app,
 ): void {
     $satellite_app = get_class($app);
     $event->on($satellite_app, [App\AnnotationsDiscovery::class, 'discover']);
@@ -21,13 +21,5 @@ return static function(
     });
 
     $event->on(Satellite\Response\ResponsePipe::class, [App\AnnotationsDiscovery::class, 'bindRoutes']);
-    $event->on(
-        Satellite\Response\ResponsePipe::class,
-        static function(Satellite\Response\ResponsePipe $pipe, Invoker\InvokerInterface $invoker) {
-            $pipeline = require __DIR__ . '/../config/pipeline.php';
-            $invoker->call($pipeline);
-
-            return $pipe;
-        }
-    );
+    $event->on(Satellite\Response\ResponsePipe::class, require dirname(__DIR__) . '/config/pipeline.php');
 };

@@ -74,8 +74,6 @@ jobs:
           #- windows-latest
 
         php-version:
-          - "7.4"
-          - "8.0"
           - "8.1"
 
         compiler:
@@ -86,16 +84,6 @@ jobs:
           - highest
 
         include:
-          - os: ubuntu-latest
-            php-version: "7.4"
-            compiler: jit
-            dependencies: highest
-
-          - os: ubuntu-latest
-            php-version: "8.0"
-            compiler: jit
-            dependencies: highest
-
           - os: ubuntu-latest
             php-version: "8.1"
             compiler: jit
