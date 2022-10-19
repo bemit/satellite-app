@@ -13,49 +13,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_app:
-    name: Build and publish app docker images
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set Branch or Tag
-        id: vars
-        run: echo ::set-output name=short_ref::${GITHUB_REF##*/}
-
-      - name: Getting PHP App together
-        run: |
-          touch .env
-          echo "SOME_ENV=yes" >> .env
-
-      - name: Docker Registry login
-        run: docker login -u ${{ secrets.DOCKER_REG_USER }} -p ${{ secrets.DOCKER_REG_PASS }}
-
-      - name: Docker pull
-        run: docker-compose -f docker-compose--prod.yml pull
-        env:
-          APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
-
-      - name: Docker build
-        run: docker-compose -f docker-compose--prod.yml build --build-arg BUILDKIT_INLINE_CACHE=1
-        env:
-          APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
-
-      - name: Run tests in the just build app image
-        run: docker run -i --rm bemiteu/satellite-app:${APP_BUILD_VERSION} sh -c "cd /var/www && wget -O phpunit https://phar.phpunit.de/phpunit-9.phar && chmod +x phpunit && cd html && /var/www/phpunit --testdox tests"
-        env:
-          APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
-
-      - name: Publish App image `master` with tag `latest`
-        if: github.ref == 'refs/heads/master'
-        run: |
-          docker tag bemiteu/satellite-app:master bemiteu/satellite-app:latest
-          docker push bemiteu/satellite-app:latest
-
-      - name: Docker Registry publish
-        run: docker-compose -f docker-compose--prod.yml push
-        env:
-          APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
-
   tests:
     name: Tests
 
@@ -129,3 +86,48 @@ jobs:
           configuration: phpunit-ci.xml
           bootstrap: vendor/autoload.php
           #args: --bootstrap=vendor/autoload.php
+
+  build_app:
+    name: Build and publish app docker images
+    runs-on: ubuntu-latest
+    needs:
+      - tests
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set Branch or Tag
+        id: vars
+        run: echo ::set-output name=short_ref::${GITHUB_REF##*/}
+
+      - name: Getting PHP App together
+        run: |
+          touch .env
+          echo "SOME_ENV=yes" >> .env
+
+      - name: Docker Registry login
+        run: docker login -u ${{ secrets.DOCKER_REG_USER }} -p ${{ secrets.DOCKER_REG_PASS }}
+
+      - name: Docker pull
+        run: docker-compose -f docker-compose--prod.yml pull
+        env:
+          APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
+
+      - name: Docker build
+        run: docker-compose -f docker-compose--prod.yml build --build-arg BUILDKIT_INLINE_CACHE=1
+        env:
+          APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
+
+      - name: Run tests in the just build app image
+        run: docker run -i --rm bemiteu/satellite-app:${APP_BUILD_VERSION} sh -c "cd /var/www && wget -O phpunit https://phar.phpunit.de/phpunit-9.phar && chmod +x phpunit && cd html && /var/www/phpunit --testdox tests"
+        env:
+          APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
+
+      - name: Publish App image `master` with tag `latest`
+        if: github.ref == 'refs/heads/master'
+        run: |
+          docker tag bemiteu/satellite-app:master bemiteu/satellite-app:latest
+          docker push bemiteu/satellite-app:latest
+
+      - name: Docker Registry publish
+        run: docker-compose -f docker-compose--prod.yml push
+        env:
+          APP_BUILD_VERSION: ${{ steps.vars.outputs.short_ref }}
