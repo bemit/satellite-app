@@ -77,6 +77,6 @@ return static function(array $config) {
             ->constructor('default')
             ->method('pushHandler', get(Monolog\Handler\StreamHandler::class)),
         Monolog\Handler\StreamHandler::class => autowire()
-            ->constructor('php://stdout', \Monolog\Level::Debug),
+            ->constructor('php://stdout', 100),
     ];
 };
