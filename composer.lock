@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e81dd136f87f428dfab77dc20b1b367",
+    "content-hash": "2abbbc20b3ea94ea3b96f201fc927dda",
     "packages": [
         {
             "name": "cache/adapter-common",
@@ -1665,20 +1665,20 @@
         },
         {
             "name": "orbiter/annotations-util",
-            "version": "0.6.0",
+            "version": "0.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bemit/orbiter-annotations-util.git",
-                "reference": "a5bfa6d7dba7d020c1d08ed52270c78b92398f22"
+                "reference": "d14e2f43c7ff96c69562b17d1444353d91528f17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bemit/orbiter-annotations-util/zipball/a5bfa6d7dba7d020c1d08ed52270c78b92398f22",
-                "reference": "a5bfa6d7dba7d020c1d08ed52270c78b92398f22",
+                "url": "https://api.github.com/repos/bemit/orbiter-annotations-util/zipball/d14e2f43c7ff96c69562b17d1444353d91528f17",
+                "reference": "d14e2f43c7ff96c69562b17d1444353d91528f17",
                 "shasum": ""
             },
             "require": {
-                "doctrine/annotations": "^1.6",
+                "doctrine/annotations": "^1.13.2",
                 "nikic/php-parser": "^4.3.0",
                 "php": ">=8.1",
                 "scaleupstack/reflection": "^1.2"
@@ -1704,9 +1704,9 @@
             "description": "Helper for Doctrine\\Annotations, with cached Reflections ⚡",
             "support": {
                 "issues": "https://github.com/bemit/orbiter-annotations-util/issues",
-                "source": "https://github.com/bemit/orbiter-annotations-util/tree/0.6.0"
+                "source": "https://github.com/bemit/orbiter-annotations-util/tree/0.6.1"
             },
-            "time": "2022-10-19T18:43:27+00:00"
+            "time": "2022-10-19T21:50:44+00:00"
         },
         {
             "name": "orbiter/satellite",

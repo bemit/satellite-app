@@ -19,7 +19,7 @@
         "orbiter/satellite-response": "~0.1.3",
         "orbiter/satellite-config": "~0.2.0",
         "orbiter/satellite-system": "~0.0.1",
-        "orbiter/annotations-util": "~0.6.0",
+        "orbiter/annotations-util": "~0.6.1",
         "middlewares/request-handler": "^2.0.0",
         "middlewares/payload": "^3.0.0",
         "php-di/php-di": "^6.4.0",

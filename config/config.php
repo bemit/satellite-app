@@ -14,11 +14,8 @@ return static function() {
 
     $is_prod = $_ENV['env'] === 'prod';
     $dir_tmp = dirname(__DIR__) . '/tmp';
-    if(!is_dir($dir_tmp)) {
-        mkdir($dir_tmp, 0775, true);
-    }
 
-    return (new Config\ConfigAggregator($is_prod ? $dir_tmp . '/config_aggregated.php' : null))
+    return (new Config\ConfigAggregator($is_prod ? $dir_tmp . '/config_aggregated.php' : null, true))
         ->append(
             [
                 'dir_tmp' => $dir_tmp,
