@@ -57,7 +57,7 @@ Look into files:
 
 ## Setup
 
-Install app skeleten and dependencies with composer in folder `satellite`:
+Install app skeleton and dependencies with composer in folder `satellite`:
 
 ```bash
 # with composer installed on machine:

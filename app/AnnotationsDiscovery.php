@@ -48,12 +48,11 @@ class AnnotationsDiscovery {
             }
         }
 
-        $discovery_flags = $this->code_info->getFlags();
-        foreach($discovery_flags as $discovery_flag) {
-            $this->discovery->discoverByAnnotation(
-                $this->code_info->getClassNames($discovery_flag)
-            );
-        }
+        $this->discovery->discoverByAnnotation(
+            $this->code_info->getClassNames(
+                ...$this->code_info->getFlags(),
+            ),
+        );
 
         if($cache_item) {
             $cache_item->set($this->discovery->getAll());
