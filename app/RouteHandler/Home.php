@@ -6,16 +6,16 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Satellite\KernelRoute\Annotations\Route;
-use Satellite\Launch\SatelliteAppConfig;
+use Satellite\Launch\SatelliteAppConfigInterface;
 use Satellite\Response\Response;
 
 /**
  * @Route(name="home", path="/", method="GET")
  */
 class Home implements RequestHandlerInterface {
-    private SatelliteAppConfig $config;
+    private SatelliteAppConfigInterface $config;
 
-    public function __construct(SatelliteAppConfig $config) {
+    public function __construct(SatelliteAppConfigInterface $config) {
         $this->config = $config;
     }
 
@@ -37,6 +37,9 @@ HTML;
         $html = <<<HTML
 <!doctype HTML>
 <html style="background: #0e1a27; color:#d5d5d5;font-family: sans-serif; text-align: center;">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>🛰️ Satellite App</title>
 <style>
     a {
         opacity: 1;

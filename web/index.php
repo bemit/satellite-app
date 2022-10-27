@@ -6,11 +6,22 @@
         return false;
     }
 
-    // this variable is set before `.env` is loaded,
-    // thus must be controlled by system (or e.g. docker), for a safer usage
-    $is_not_prod = (isset($_ENV['env']) && $_ENV['env'] !== 'prod');
+    // this variable is set before `.env` is loaded, even before auto-loading,
+    // thus must be controlled by system (or e.g. docker)
+    $log_perf_or_not_prod = (
+        PHP_SAPI === 'cli-server' ||
+        (isset($_ENV['env']) && $_ENV['env'] !== 'prod') ||
+        (
+            isset($_ENV['satellite_index_log_perf']) && (
+                $_ENV['satellite_index_log_perf'] === 'on' ||
+                $_ENV['satellite_index_log_perf'] === '1' ||
+                $_ENV['satellite_index_log_perf'] === true ||
+                $_ENV['satellite_index_log_perf'] === 'yes'
+            )
+        )
+    );
 
-    if(PHP_SAPI === 'cli-server' || $is_not_prod) {
+    if($log_perf_or_not_prod) {
         $ssl = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
         $port = $_SERVER['SERVER_PORT'];
         $port = ((!$ssl && $port === '80') || ($ssl && $port === '443')) ? '' : ':' . $port;
@@ -25,7 +36,7 @@
     // the actual start code:
     require_once dirname(__DIR__) . '/launch.php';
 
-    if(PHP_SAPI === 'cli-server' || $is_not_prod) {
+    if($log_perf_or_not_prod) {
         error_log('... ' . number_format((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']), 6) . 's' . PHP_EOL);
     }
 

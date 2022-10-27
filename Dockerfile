@@ -5,27 +5,20 @@ FROM php:8.1-rc-fpm-alpine AS php_fpm
 
 RUN apk add \
         libxml2-dev \
-        libzip-dev \
         # for gd:
         freetype-dev \
         libjpeg-turbo-dev \
         libpng-dev \
-        # for web-push:
-        gmp-dev \
         # for pdo_pgsql:
         postgresql-dev
 
 # `mbstring` is not needed, already configured in base image for php-alpine
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install opcache \
-        gd zip xml \
+        gd xml \
         pdo pdo_pgsql pcntl \
-        # for better uuid:
         bcmath \
-        # for i18n mails:
         intl \
-        # for web-push:
-        gmp \
     && docker-php-source delete
 
 RUN mkdir /tmp/php-opcache && chown -R www-data /tmp/php-opcache

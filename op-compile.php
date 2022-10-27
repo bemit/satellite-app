@@ -9,12 +9,18 @@ function searchFiles($dir) {
 
     $scanned_dir = [];
     foreach($iterator as $file) {
-        if($file->isFile() && false !== strpos($file->getPathname(), 'test')) {
+        /**
+         * @var SplFileInfo $file
+         */
+        if(
+            !$file->isFile() ||
+            $file->getExtension() !== 'php' ||
+            str_contains($file->getPathname(), 'test') ||
+            str_starts_with($file->getBasename(), '.')
+        ) {
             continue;
         }
-        if($file->isFile() && array_key_exists($file->getExtension(), ['php' => true])) {
-            $scanned_dir[] = $file->getPathname();
-        }
+        $scanned_dir[] = $file->getPathname();
     }
 
     return $scanned_dir;
@@ -23,10 +29,15 @@ function searchFiles($dir) {
 $dirs = [
     __DIR__ . '/app',
     __DIR__ . '/vendor/bin',
-    //__DIR__ . '/vendor/composer',
-    // adding doctrine is too much
-    //__DIR__ . '/vendor/doctrine',
+    __DIR__ . '/vendor/composer',
+    __DIR__ . '/vendor/league/flysystem/src',
+    __DIR__ . '/vendor/monolog/monolog/src',
+    __DIR__ . '/vendor/nyholm/psr7/src',
     __DIR__ . '/vendor/orbiter',
+    __DIR__ . '/vendor/php-di/invoker/src',
+    __DIR__ . '/vendor/psr',
+    __DIR__ . '/vendor/scaleupstack',
+    __DIR__ . '/vendor/vlucas/phpdotenv/src',
 ];
 
 $scanned_files = [];
@@ -35,15 +46,13 @@ foreach($dirs as $dir) {
 }
 
 $dirs_compile = [
-    __DIR__ . '/tmp',
 ];
 
 $scanned_files_compile = [
-    __DIR__ . '/boot.php',
+    __DIR__ . '/assemble.php',
     __DIR__ . '/cli',
-    __DIR__ . '/events.php',
     __DIR__ . '/launch.php',
-    __DIR__ . '/server.php',
+    __DIR__ . '/web/index.php',
 ];
 foreach($dirs_compile as $dir) {
     array_push($scanned_files_compile, ...searchFiles($dir));

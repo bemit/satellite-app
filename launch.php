@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-use Satellite\Launch\SatelliteLaunch;
+use Satellite\Launch\SatelliteLaunchInterface;
 
 (static function() {
     $container = (require __DIR__ . '/assemble.php')();
 
     /**
-     * @var SatelliteLaunch $launch
+     * @var SatelliteLaunchInterface $launch
      */
-    $launch = $container->get(SatelliteLaunch::class);
+    $launch = $container->get(SatelliteLaunchInterface::class);
     $launch->ignition();
 })();

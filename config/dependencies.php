@@ -7,11 +7,13 @@ use function DI\create;
 return static function(array $config) {
     $is_prod = $config['is_prod'] ?? false;
     return [
-        Satellite\Launch\SatelliteAppConfig::class => autowire()->constructor($config),
+        Satellite\Launch\SatelliteAppConfigInterface::class => autowire(Satellite\Launch\SatelliteAppConfig::class)
+            ->constructor($config),
         //
         // event handler
         Satellite\Event\EventListenerInterface::class => autowire(Satellite\Event\EventListener::class),
-        Satellite\Event\EventDispatcher::class => autowire()
+        Psr\EventDispatcher\ListenerProviderInterface::class => get(Satellite\Event\EventListenerInterface::class),
+        Psr\EventDispatcher\EventDispatcherInterface::class => autowire(Satellite\Event\EventDispatcher::class)
             ->constructorParameter('listener', get(Psr\EventDispatcher\ListenerProviderInterface::class))
             ->constructorParameter('invoker', get(Invoker\InvokerInterface::class))
             ->constructorParameter(
@@ -26,8 +28,6 @@ return static function(array $config) {
                                 ),
                         ) : null,
             ),
-        Psr\EventDispatcher\ListenerProviderInterface::class => get(Satellite\Event\EventListenerInterface::class),
-        Psr\EventDispatcher\EventDispatcherInterface::class => get(Satellite\Event\EventDispatcher::class),
         //
         // HTTP Servers & Clients
         Psr\Http\Client\ClientInterface::class => autowire(GuzzleHttp\Client::class),

@@ -51,7 +51,7 @@ Open your browser on: http://localhost:3333
 Look into files:
 
 - [`config`](./config) folder with [app config and wiring](#config)
-- [`assemble.php`](./assemble.php) include composer autoload, setup DI, Annotations, gather configurations and create the system modules from config
+- [`assemble.php`](./assemble.php) composer autoload, gathers configurations and creates the system modules from that config
 - [`launch.php`](./launch.php) runs `assemble()` and dispatches the `SatelliteApp` event
 - [`app`](./app) folder with a basic commands and route handler structure
 
@@ -152,7 +152,7 @@ Use e.g. `.env` to add configuration.
 
 Default's config includes:
 
-- env var `env` if in production or not in production
+- env var `env`: if in production or not in production
     - with value `prod` it is assumed in the App (not the framework) that it is in production
     - use `$_ENV['env'] === 'prod'` to check for production
     - for dev-error pages: add var `dev.editor` with one value of `PrettyPageHandler::EDITOR_*` to link `whoops` "open file" with IDE
