@@ -15,8 +15,8 @@ function searchFiles($dir) {
         if(
             !$file->isFile() ||
             $file->getExtension() !== 'php' ||
-            str_contains($file->getPathname(), 'test') ||
-            str_starts_with($file->getBasename(), '.')
+            str_starts_with($file->getBasename(), '.') ||
+            str_contains(strtolower($file->getPathname()), 'test')
         ) {
             continue;
         }
